@@ -1,0 +1,1073 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>منصّة الموارد الصحية الذكية — نسخة عرض تجريبية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+<style>
+:root{--bg:#EDF2F1;--surface:#FFFFFF;--surface2:#F4F7F6;--ink:#13272B;--muted:#53676B;--line:#D3DDDB;--primary:#0B6B6B;--primary-soft:#DCEEED;--on-primary:#FFFFFF;--pred:#6A4BA6;--pred-soft:#EFE9F9;--rule:#7A5C12;--rule-soft:#F7EFD9;--sim:#2A5B99;--sim-soft:#E4ECF8;--crit:#B42318;--crit-soft:#FCE9E7;--high:#A84B08;--high-soft:#FDEDDD;--medr:#6F5A00;--medr-soft:#F8F1CF;--ok:#2B7349;--ok-soft:#E1F1E7;--hatch:rgba(19,39,43,.06);
+  color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1A1C;--surface:#152427;--surface2:#1B2D31;--ink:#E4EDEC;--muted:#9AB0B2;--line:#2A3F43;--primary:#45B8B2;--primary-soft:#173A3B;--on-primary:#06201F;--pred:#B79DF2;--pred-soft:#2A2340;--rule:#DDB65C;--rule-soft:#33291A;--sim:#7FAAE8;--sim-soft:#1C2A40;--crit:#F27B70;--crit-soft:#3A1E1C;--high:#F0A060;--high-soft:#3A2818;--medr:#E3C552;--medr-soft:#332D14;--ok:#70C391;--ok-soft:#163023;--hatch:rgba(255,255,255,.04);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0E1A1C;--surface:#152427;--surface2:#1B2D31;--ink:#E4EDEC;--muted:#9AB0B2;--line:#2A3F43;--primary:#45B8B2;--primary-soft:#173A3B;--on-primary:#06201F;--pred:#B79DF2;--pred-soft:#2A2340;--rule:#DDB65C;--rule-soft:#33291A;--sim:#7FAAE8;--sim-soft:#1C2A40;--crit:#F27B70;--crit-soft:#3A1E1C;--high:#F0A060;--high-soft:#3A2818;--medr:#E3C552;--medr-soft:#332D14;--ok:#70C391;--ok-soft:#163023;--hatch:rgba(255,255,255,.04);color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic","Segoe UI",Tahoma,"Noto Sans Arabic",sans-serif;font-size:15px;line-height:1.65}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.synbar{background:repeating-linear-gradient(135deg,var(--hatch) 0 8px,transparent 8px 16px),var(--rule-soft);color:var(--rule);font-size:13px;padding:6px 16px;border-bottom:1px solid var(--line);text-align:center}
+.app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:calc(100vh - 34px)}
+.side{background:var(--surface);border-inline-end:1px solid var(--line);padding:18px 14px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;gap:10px;align-items:center}
+.brand svg{flex:none}
+.brand b{display:block;font-size:15px;line-height:1.35}
+.brand small{color:var(--muted);font-size:12px}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{all:unset;cursor:pointer;padding:9px 12px;border-radius:8px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;align-items:center}
+.nav button:hover{background:var(--surface2);color:var(--ink)}
+.nav button[aria-current="page"]{background:var(--primary-soft);color:var(--primary);font-weight:600}
+.nav button:focus-visible{outline:2px solid var(--primary)}
+.count{font-size:12px;background:var(--crit-soft);color:var(--crit);border-radius:999px;padding:0 8px;font-weight:600}
+.legend h4{margin:0 0 8px;font-size:13px;color:var(--muted);font-weight:600}
+.legend ul{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:12.5px;color:var(--muted)}
+.legend li{display:grid;gap:3px}
+main{min-width:0}
+.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:12px 24px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.top h1{font-size:20px;margin:0;font-weight:700}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.field{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--muted)}
+select,input[type=text],textarea{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:14px;min-height:36px}
+.content{padding:20px 24px 48px;display:grid;gap:18px;max-width:1440px}
+.lead{color:var(--muted);margin:0;max-width:78ch}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;min-width:0}
+.panel>h2{font-size:16px;margin:0 0 4px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.panel>.sub{color:var(--muted);font-size:13px;margin:0 0 12px;max-width:90ch}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.kpi{background:var(--surface);padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.kpi .lbl{font-size:13px;color:var(--muted)}
+.kpi .val{font-size:26px;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums}
+.kpi .val small{font-size:14px;font-weight:500;color:var(--muted)}
+.kpi .cmp{font-size:12.5px;color:var(--muted)}
+.tag{display:inline-flex;align-items:center;font-size:11.5px;font-weight:500;padding:0 8px;border-radius:999px;border:1px solid;white-space:nowrap;line-height:20px;width:max-content}
+.t-syn{color:var(--muted);border-style:dotted;border-color:var(--muted)}
+.t-pred{color:var(--pred);background:var(--pred-soft);border-style:dashed;border-color:var(--pred)}
+.t-rule{color:var(--rule);background:var(--rule-soft);border-color:var(--rule);border-radius:4px}
+.t-sim{color:var(--sim);background:var(--sim-soft);border:3px double var(--sim);line-height:16px}
+.risk{display:inline-block;font-size:12.5px;font-weight:600;padding:1px 10px;border-radius:6px;white-space:nowrap}
+.r-crit{background:var(--crit-soft);color:var(--crit)}.r-high{background:var(--high-soft);color:var(--high)}.r-med{background:var(--medr-soft);color:var(--medr)}.r-low{background:var(--ok-soft);color:var(--ok)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:start;color:var(--muted);font-weight:600;font-size:12.5px;background:var(--surface2);padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;position:sticky;top:0}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+tr.click{cursor:pointer}tr.click:hover td{background:var(--surface2)}
+tr.sel td{background:var(--primary-soft)}
+.scroll{max-height:440px;overflow:auto}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 14px;cursor:pointer;min-height:36px}
+.btn:hover{background:var(--surface2)}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:var(--on-primary);font-weight:600}
+.btn.danger{color:var(--crit);border-color:var(--crit)}
+.btn.link{border:0;background:none;color:var(--primary);padding:0 2px;min-height:0;text-decoration:underline;text-underline-offset:3px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.chart{position:relative;height:280px}
+.chart.sm{height:220px}
+.alerts{list-style:none;margin:0;padding:0;display:grid}
+.alerts li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line)}
+.alerts li:last-child{border-bottom:0}
+.alerts .meta{font-size:12.5px;color:var(--muted)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line)}
+.tabs button{all:unset;cursor:pointer;padding:8px 14px;border-bottom:2px solid transparent;color:var(--muted);font-weight:500}
+.tabs button[aria-selected="true"]{color:var(--primary);border-color:var(--primary);font-weight:600}
+.tabs button:focus-visible{outline:2px solid var(--primary)}
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.rec{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--surface);display:grid;gap:8px;border-inline-start:4px solid var(--line)}
+.rec.s-crit{border-inline-start-color:var(--crit)}.rec.s-high{border-inline-start-color:var(--high)}.rec.s-med{border-inline-start-color:var(--medr)}.rec.s-low{border-inline-start-color:var(--ok)}
+.rec h3{margin:0;font-size:15px}
+.rec .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12.5px;color:var(--muted)}
+.rec ul{margin:0;padding-inline-start:18px;font-size:13px;color:var(--muted)}
+.rec .act{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.rec textarea{flex:1 1 240px;min-height:36px;resize:vertical}
+.status{font-size:12.5px;font-weight:600;padding:1px 10px;border-radius:6px;background:var(--surface2)}
+.st-approved{background:var(--ok-soft);color:var(--ok)}.st-rejected{background:var(--crit-soft);color:var(--crit)}.st-deferred{background:var(--medr-soft);color:var(--medr)}.st-pending{background:var(--primary-soft);color:var(--primary)}
+dl.trace{display:grid;grid-template-columns:minmax(180px,auto) 1fr;gap:6px 16px;margin:0;font-size:14px}
+dl.trace dt{color:var(--muted)}dl.trace dd{margin:0;font-variant-numeric:tabular-nums}
+dialog{max-width:820px;width:calc(100% - 24px);border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);padding:0}
+dialog::backdrop{background:rgba(8,20,22,.45)}
+.dlg-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.dlg-h h2{margin:0;font-size:17px}
+.dlg-b{padding:16px 18px;display:grid;gap:14px;max-height:72vh;overflow:auto}
+.note{font-size:13px;color:var(--muted);background:var(--surface2);border-radius:8px;padding:10px 12px;margin:0}
+.heat td{text-align:center;min-width:56px}
+.prose{max-width:80ch}
+.prose h3{font-size:15px;margin:18px 0 6px}
+.prose p,.prose li{color:var(--ink);font-size:14.5px}
+.prose ul{padding-inline-start:20px}
+.range{display:flex;gap:10px;align-items:center}
+.range input{flex:1;accent-color:var(--primary)}
+.loader{display:grid;place-items:center;min-height:60vh;color:var(--muted);text-align:center}
+.empty{color:var(--muted);padding:18px;text-align:center}
+@media (max-width:1100px){.grid3{grid-template-columns:1fr 1fr}}
+@media (max-width:900px){
+  .app{grid-template-columns:1fr}
+  .side{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;padding:10px 12px;gap:10px;border-inline-end:0;border-bottom:1px solid var(--line)}
+  .nav{flex-direction:row;overflow-x:auto;width:100%;gap:4px}
+  .nav button{white-space:nowrap}
+  .legend{display:none}
+  .grid2,.grid3{grid-template-columns:1fr}
+  .top,.content{padding-inline:14px}
+  .top{position:static}
+  .kpi .val{font-size:22px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+</style>
+</head>
+<body>
+<div class="synbar" role="note">جميع البيانات في هذه النسخة تجريبية ومُولَّدة آلياً لمستشفيات افتراضية. لا تحتوي على بيانات مرضى أو مستشفيات حقيقية، ولا تمثّل نتائجها تحسّناً فعلياً.</div>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect x="1" y="1" width="32" height="32" rx="9" fill="var(--primary)"/><path d="M14 8h6v6h6v6h-6v6h-6v-6H8v-6h6z" fill="var(--on-primary)"/><path d="M8 26 L14 20 L18 23 L26 13" stroke="var(--pred)" stroke-width="2.2" fill="none" stroke-dasharray="3 2" stroke-linecap="round"/></svg>
+      <div><b>منصّة الموارد الصحية</b><small>نموذج أولي للمسابقة</small></div>
+    </div>
+    <nav class="nav" id="nav" aria-label="التنقل الرئيسي"></nav>
+    <div class="legend">
+      <h4>مصدر كل رقم</h4>
+      <ul>
+        <li><span class="tag t-syn">بيانات تجريبية</span>قيم مُولَّدة تحاكي السجلات التشغيلية</li>
+        <li><span class="tag t-pred">تنبؤ نموذج</span>مخرجات نموذج إحصائي أو تعلّم آلي؛ خطوط متقطعة في الرسوم</li>
+        <li><span class="tag t-rule">قاعدة حسابية</span>حساب محدد مسبقاً، ليس ذكاءً اصطناعياً</li>
+        <li><span class="tag t-sim">نتيجة محاكاة</span>مقارنة افتراضية، ليست نتيجة فعلية</li>
+      </ul>
+      <p style="font-size:12px;color:var(--muted);margin:10px 0 0">لا توجد بيانات فعلية حيّة في هذه النسخة.</p>
+    </div>
+  </aside>
+  <main>
+    <div class="top">
+      <h1 id="pageTitle">نظرة عامة</h1>
+      <div class="controls">
+        <label class="field">المنشأة<select id="fFac"></select></label>
+        <label class="field">الدور التجريبي<select id="fRole"></select></label>
+      </div>
+    </div>
+    <div class="content" id="content"><div class="loader"><div><b>جارٍ توليد البيانات التجريبية وتدريب النماذج…</b><br>يستغرق ذلك ثوانيَ قليلة داخل متصفحك.</div></div></div>
+  </main>
+</div>
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <div class="dlg-h"><h2 id="dlgTitle"></h2><button class="btn" id="dlgClose">إغلاق</button></div>
+  <div class="dlg-b" id="dlgBody"></div>
+</dialog>
+<script>
+/* ===== محرك البيانات التجريبية والنماذج — يعمل بالكامل داخل المتصفح ===== */
+const E = (function () {
+  const DAY = 864e5, TODAY = Date.UTC(2026, 9, 9), H = 730, HOLD = 56, BH = 365, SLOTS = 18;
+  const dt = o => new Date(TODAY + o * DAY);
+  const iso = d => d.toISOString().slice(0, 10);
+  const doy = d => Math.floor((d.getTime() - Date.UTC(d.getUTCFullYear(), 0, 1)) / DAY);
+  let R = Math.random;
+  function rng(seed) { let a = seed >>> 0; return function () { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function randn() { let u = 0; while (u === 0) u = R(); const v = R(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+  function poisson(l) { if (l <= 0) return 0; if (l > 30) return Math.max(0, Math.round(l + Math.sqrt(l) * randn())); const L = Math.exp(-l); let k = 0, p = 1; do { k++; p *= R(); } while (p > L); return k - 1; }
+  const sum = a => { let s = 0; for (const x of a) s += x; return s; };
+  const mean = a => a.length ? sum(a) / a.length : 0;
+  const sig = z => 1 / (1 + Math.exp(-z));
+  const dot = (w, x) => { let s = 0; for (let i = 0; i < w.length; i++) s += w[i] * x[i]; return s; };
+  function Phi(z) { const t = 1 / (1 + 0.2316419 * Math.abs(z)); const d = 0.3989423 * Math.exp(-z * z / 2); const p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274)))); return z > 0 ? 1 - p : p; }
+
+  function solve(A, b) {
+    const n = b.length, M = A.map((r, i) => [...r, b[i]]);
+    for (let c = 0; c < n; c++) {
+      let p = c; for (let r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r;
+      [M[c], M[p]] = [M[p], M[c]];
+      const v = M[c][c] || 1e-12;
+      for (let r = 0; r < n; r++) { if (r === c) continue; const f = M[r][c] / v; if (f !== 0) for (let k = c; k <= n; k++) M[r][k] -= f * M[c][k]; }
+    }
+    return M.map((r, i) => r[n] / (r[i] || 1e-12));
+  }
+  function ridge(X, y, lam) {
+    const p = X[0].length, A = Array.from({ length: p }, () => new Array(p).fill(0)), b = new Array(p).fill(0);
+    for (let i = 0; i < X.length; i++) { const x = X[i]; for (let j = 0; j < p; j++) { if (x[j] === 0) continue; b[j] += x[j] * y[i]; for (let k = j; k < p; k++) A[j][k] += x[j] * x[k]; } }
+    for (let j = 0; j < p; j++) { for (let k = 0; k < j; k++) A[j][k] = A[k][j]; if (j > 0) A[j][j] += lam; }
+    return solve(A, b);
+  }
+  function logit(X, y, lam) {
+    const p = X[0].length; const w = new Array(p).fill(0);
+    for (let it = 0; it < 12; it++) {
+      const A = Array.from({ length: p }, () => new Array(p).fill(0)), g = new Array(p).fill(0);
+      for (let i = 0; i < X.length; i++) {
+        const x = X[i], m = sig(dot(w, x)), s = m * (1 - m), r = y[i] - m;
+        for (let j = 0; j < p; j++) { if (x[j] === 0) continue; g[j] += x[j] * r; const sx = s * x[j]; for (let k = j; k < p; k++) A[j][k] += sx * x[k]; }
+      }
+      for (let j = 0; j < p; j++) { for (let k = 0; k < j; k++) A[j][k] = A[k][j]; if (j > 0) { A[j][j] += lam; g[j] -= lam * w[j]; } }
+      const d = solve(A, g); let mx = 0;
+      for (let j = 0; j < p; j++) { w[j] += d[j]; mx = Math.max(mx, Math.abs(d[j])); }
+      if (mx < 1e-7) break;
+    }
+    return w;
+  }
+  function auc(s, y) {
+    const n = s.length, idx = s.map((v, i) => i).sort((a, b) => s[a] - s[b]);
+    let sumR = 0, i = 0;
+    while (i < n) { let j = i; while (j + 1 < n && s[idx[j + 1]] === s[idx[i]]) j++; const avg = (i + j) / 2 + 1; for (let k = i; k <= j; k++) if (y[idx[k]]) sumR += avg; i = j + 1; }
+    const np = sum(y), nn = n - np; return (sumR - np * (np + 1) / 2) / (np * nn);
+  }
+  const brier = (p, y) => mean(p.map((v, i) => (v - y[i]) ** 2));
+
+  /* ---------- البيانات المرجعية (أسماء افتراضية بالكامل) ---------- */
+  const HOSP = [
+    { id: 'H1', name: 'مستشفى النخيل التعليمي', city: 'عمّان', size: 1.4 },
+    { id: 'H2', name: 'مستشفى سهل حوران العام', city: 'إربد', size: 1.0 },
+    { id: 'H3', name: 'مستشفى الهضبة الحكومي', city: 'الزرقاء', size: 0.9 },
+    { id: 'H4', name: 'مستشفى خليج المرجان', city: 'العقبة', size: 0.6 }
+  ];
+  const SUPPLIERS = ['مورّد الشرق للأدوية', 'مورّد البلقاء الطبي', 'مورّد المستلزمات المتحدة'];
+  const MEDS = [
+    { id: 'M01', name: 'أموكسيسيلين 500 ملغ', cat: 'مضادات حيوية', unit: 'كبسولة', price: 0.05, base: 190, season: 'winter', lead: 14, shelf: 730, sup: 0 },
+    { id: 'M02', name: 'سيفترياكسون 1 غ (حقن)', cat: 'مضادات حيوية', unit: 'قارورة', price: 1.2, base: 42, season: 'winter', lead: 21, shelf: 730, sup: 0 },
+    { id: 'M03', name: 'إنسولين غلارجين (قلم)', cat: 'أمراض مزمنة', unit: 'قلم', price: 6.5, base: 22, season: null, lead: 30, shelf: 540, sup: 1, cold: true },
+    { id: 'M04', name: 'ميتفورمين 850 ملغ', cat: 'أمراض مزمنة', unit: 'قرص', price: 0.03, base: 300, season: null, lead: 10, shelf: 1095, sup: 1 },
+    { id: 'M05', name: 'أملوديبين 5 ملغ', cat: 'أمراض مزمنة', unit: 'قرص', price: 0.04, base: 220, season: null, lead: 10, shelf: 1095, sup: 0 },
+    { id: 'M06', name: 'باراسيتامول 1 غ (وريدي)', cat: 'مسكنات وتخدير', unit: 'عبوة', price: 0.9, base: 60, season: null, lead: 14, shelf: 540, sup: 0 },
+    { id: 'M07', name: 'مورفين 10 ملغ (حقن)', cat: 'مسكنات وتخدير', unit: 'أمبولة', price: 0.7, base: 12, season: null, lead: 35, shelf: 1095, sup: 1, controlled: true },
+    { id: 'M08', name: 'سالبوتامول (بخاخ)', cat: 'أمراض تنفسية', unit: 'بخاخ', price: 2.1, base: 26, season: 'winter', lead: 21, shelf: 730, sup: 0 },
+    { id: 'M09', name: 'محلول ملحي 0.9% (500 مل)', cat: 'سوائل وريدية', unit: 'كيس', price: 0.45, base: 260, season: 'summer', lead: 7, shelf: 730, sup: 2 },
+    { id: 'M10', name: 'إينوكسابارين 40 ملغ', cat: 'مضادات تخثر', unit: 'حقنة', price: 2.8, base: 35, season: null, lead: 28, shelf: 730, sup: 1 },
+    { id: 'M11', name: 'قفازات فحص نتريل', cat: 'مستلزمات طبية', unit: 'علبة', price: 3.2, base: 30, season: null, lead: 14, shelf: 1095, sup: 2 },
+    { id: 'M12', name: 'كانيولا وريدية 20G', cat: 'مستلزمات طبية', unit: 'قطعة', price: 0.35, base: 140, season: null, lead: 14, shelf: 1825, sup: 2 }
+  ];
+  const CLINICS = [{ id: 'IM', name: 'الباطنية' }, { id: 'PD', name: 'الأطفال' }, { id: 'OR', name: 'العظام' }, { id: 'OB', name: 'النسائية والتوليد' }, { id: 'CA', name: 'القلب' }];
+  const DEPTS = [
+    { id: 'MED', name: 'الباطنية', base: 40, los: 4.5, season: 0.15, target: 0.86 },
+    { id: 'SUR', name: 'الجراحة العامة', base: 32, los: 3.5, season: 0, target: 0.84 },
+    { id: 'PED', name: 'الأطفال', base: 20, los: 3, season: 0.25, target: 0.78 },
+    { id: 'ICU', name: 'العناية المركزة', base: 10, los: 6, season: 0.08, target: 0.84, noSub: true },
+    { id: 'ISO', name: 'غرف العزل', base: 6, los: 7, season: 0.2, target: 0.72, noSub: true }
+  ];
+  const DOW_MED = [1.1, 1.08, 1.05, 1.05, 1.0, 0.62, 0.78]; // الأحد..السبت (الجمعة والسبت عطلة)
+
+  /* ---------- الوحدة الأولى: الأدوية ---------- */
+  const FCACHE = [];
+  function dfeat(i) {
+    if (FCACHE[i]) return FCACHE[i];
+    const d = dt(i - H), w = d.getUTCDay(), a = 2 * Math.PI * doy(d) / 365.25, f = [1, i / 365];
+    for (let k = 0; k < 7; k++) if (k !== 4) f.push(w === k ? 1 : 0);
+    f.push(Math.sin(a), Math.cos(a));
+    return (FCACHE[i] = f);
+  }
+  function fitDemand(y, end) {
+    const st = Math.max(0, end - 540), X = [], Y = [];
+    for (let i = st; i < end; i++) { X.push(dfeat(i)); Y.push(y[i]); }
+    const w = ridge(X, Y, 0.5); let ss = 0;
+    for (let k = 0; k < X.length; k++) { const r = Y[k] - dot(w, X[k]); ss += r * r; }
+    return { w, sigma: Math.sqrt(ss / Math.max(1, X.length - w.length)), pred: i => Math.max(0, dot(w, dfeat(i))) };
+  }
+
+  function buildMeds() {
+    const series = [];
+    for (const h of HOSP) for (const m of MEDS) {
+      const y = new Array(H), lvl = m.base * h.size * (0.85 + 0.3 * R());
+      for (let i = 0; i < H; i++) {
+        const d = dt(i - H), a = 2 * Math.PI * doy(d) / 365.25; let s = 1;
+        if (m.season === 'winter') s = 1 + 0.32 * Math.cos(a - 2 * Math.PI * 20 / 365.25);
+        else if (m.season === 'summer') s = 1 + 0.22 * Math.cos(a - 2 * Math.PI * 205 / 365.25);
+        y[i] = poisson(lvl * DOW_MED[d.getUTCDay()] * s * (1 + 0.00022 * i) * Math.exp(0.08 * randn()));
+      }
+      series.push({ key: h.id + '|' + m.id, h: h.id, m: m.id, hosp: h, med: m, y });
+    }
+    // تقييم خارج العينة: آخر 56 يوماً
+    let aeM = 0, aeB = 0, act = 0, bias = 0, n = 0;
+    for (const s of series) {
+      const mdl = fitDemand(s.y, H - HOLD), base = mean(s.y.slice(H - HOLD - 28, H - HOLD));
+      s.evalPred = []; let a1 = 0, a2 = 0, at = 0;
+      for (let i = H - HOLD; i < H; i++) {
+        const p = mdl.pred(i), yv = s.y[i]; s.evalPred.push(p);
+        a1 += Math.abs(p - yv); a2 += Math.abs(base - yv); at += yv; bias += p - yv; n++;
+      }
+      aeM += a1; aeB += a2; act += at; s.wapeM = a1 / at; s.wapeB = a2 / at;
+    }
+    const evalM = { wapeModel: aeM / act, wapeBase: aeB / act, maeModel: aeM / n, maeBase: aeB / n, biasPct: bias / act, n, series: series.length };
+
+    // النموذج النهائي والحالة الحالية للمخزون
+    for (const s of series) {
+      const m = s.med, mdl = fitDemand(s.y, H); s.sigma = mdl.sigma;
+      s.fc = []; for (let j = 0; j < 150; j++) s.fc.push(mdl.pred(H + j));
+      s.ma28 = mean(s.y.slice(H - 28));
+      const avg30 = mean(s.fc.slice(0, 30)); s.avg30 = avg30;
+      const r = R(); let cover;
+      if (r < 0.12) cover = 2 + R() * 6; else if (r < 0.3) cover = 9 + R() * 14; else if (r < 0.85) cover = 25 + R() * 45; else cover = 100 + R() * 120;
+      s.stock = Math.round(avg30 * cover);
+      s.onOrder = 0; s.eta = null;
+      if (R() < 0.3 && cover < 40) { s.onOrder = Math.round(avg30 * (25 + R() * 15)); s.eta = 1 + Math.floor(R() * m.lead); }
+      const L = m.lead; s.L = L;
+      // التشغيلات وتواريخ الانتهاء
+      const k = 1 + Math.floor(R() * 3), lots = []; let left = s.stock;
+      for (let q = 0; q < k; q++) {
+        const qty = q === k - 1 ? left : Math.round(left * (0.3 + 0.4 * R())); left -= qty;
+        let off = Math.round(25 + R() * m.shelf * 0.8);
+        if (cover > 100 && q === 0) off = Math.round(30 + R() * 90);
+        if (R() < 0.12) off = Math.round(20 + R() * 70);
+        lots.push({ lot: 'LOT-' + s.h + m.id.slice(1) + '-' + (q + 1), qty, off, expired: false });
+      }
+      if (R() < 0.08) lots.push({ lot: 'LOT-' + s.h + m.id.slice(1) + '-Q', qty: Math.round(avg30 * (2 + R() * 8)), off: -Math.round(1 + R() * 25), expired: true });
+      // قاعدة FEFO مع الطلب المتوقع
+      const capTo = days => { let c = 0; for (let j = 0; j < days; j++) c += j < s.fc.length ? s.fc[j] : avg30; return c; };
+      let used = 0;
+      for (const lt of lots.filter(l => !l.expired).sort((a, b) => a.off - b.off)) {
+        const capd = capTo(lt.off), avail = Math.max(0, capd - used), cons = Math.min(lt.qty, avail);
+        lt.consumable = Math.round(cons); lt.atRisk = Math.round(lt.qty - cons); used += cons;
+      }
+      for (const lt of lots) if (lt.expired) { lt.consumable = 0; lt.atRisk = lt.qty; }
+      s.lots = lots;
+      // خطر النقص
+      let ltd = 0; for (let j = 0; j < L; j++) ltd += s.fc[j];
+      const sigL = Math.sqrt(L * s.sigma ** 2 + (avg30 * 0.2 * L) ** 2), ss = 1.65 * sigL; // تباين الطلب + تباين مهلة التوريد (20٪)
+      s.ltd = ltd; s.sigL = sigL; s.ss = ss; s.rop = ltd + ss; s.position = s.stock + s.onOrder;
+      s.pStockout = 1 - Phi((s.position - ltd) / Math.max(1e-6, sigL));
+      let st = s.stock, dz = null;
+      for (let j = 0; j < 150; j++) { if (s.eta === j) st += s.onOrder; st -= s.fc[j]; if (st < 0) { dz = j; break; } }
+      s.daysToZero = dz; // null = أكثر من 150 يوماً
+      if (dz !== null && dz < L) s.risk = 'crit';
+      else if (s.position < s.rop) s.risk = 'high';
+      else if (s.position < s.rop + 14 * avg30) s.risk = 'med';
+      else s.risk = 'low';
+      let need = 0; for (let j = 0; j < L + 30; j++) need += s.fc[j];
+      s.suggestQty = s.risk === 'low' ? 0 : Math.max(0, Math.ceil((need + ss - s.position) / 10) * 10);
+      let ob = 0, cum = 0;
+      if (s.position > s.rop) { for (let j = 0; j < 150; j++) { cum += s.fc[j]; if (s.position - cum < s.rop) { ob = j; break; } ob = j; } }
+      s.orderBy = ob;
+      s.surplus = Math.max(0, Math.round(s.stock - avg30 * 60));
+      s.expiring90 = lots.filter(l => !l.expired && l.off <= 90).reduce((a, l) => a + l.atRisk, 0);
+      s.expiredQty = lots.filter(l => l.expired).reduce((a, l) => a + l.qty, 0);
+    }
+
+    // محاكاة سياستين لإعادة الطلب على آخر 120 يوماً (طلب فعلي تجريبي)
+    for (const s of series) {
+      const L = s.L, start = H - 120, leads = [];
+      for (let k = 0; k < 40; k++) leads.push(Math.max(2, Math.round(L * (1 + 0.2 * randn()))));
+      s.sim = {};
+      for (const pol of ['base', 'fc']) {
+        let stock = Math.round(mean(s.y.slice(start - 90, start)) * (L + 21)), pipe = [], k = 0, so = 0, unmet = 0, inv = 0;
+        for (let i = start; i < H; i++) {
+          pipe = pipe.filter(o => { if (o.at === i) { stock += o.q; return false; } return true; });
+          if ((i - start) % 7 === 0) {
+            const pos = stock + sum(pipe.map(o => o.q)); let rop, up;
+            if (pol === 'base') { const avg = mean(s.y.slice(i - 90, i)); rop = avg * (L + 14); up = avg * (L + 37); }
+            else { const md = fitDemand(s.y, i); let a = 0, b = 0; for (let j = 0; j < L + 37; j++) { const p = md.pred(i + j); if (j < L + 7) a += p; b += p; } const ssv = 1.65 * Math.sqrt((L + 7) * md.sigma ** 2 + (a / (L + 7) * 0.2 * L) ** 2); rop = a + ssv; up = b + ssv; }
+            if (pos < rop) pipe.push({ q: Math.round(up - pos), at: i + leads[Math.min(k++, 39)] });
+          }
+          const d = s.y[i];
+          if (d > stock) { so++; unmet += d - stock; stock = 0; } else stock -= d;
+          inv += stock;
+        }
+        s.sim[pol] = { so, unmet, invVal: inv / 120 * s.med.price, unmetVal: unmet * s.med.price };
+      }
+    }
+    return { series, eval: evalM };
+  }
+
+  /* ---------- الوحدة الثانية: العيادات ---------- */
+  function buildFlow() {
+    const appts = [], cdays = [], cEff = { IM: 0, PD: -0.1, OR: 0.1, OB: -0.2, CA: -0.15 };
+    for (const h of HOSP) for (const c of CLINICS) {
+      const base = Math.max(1, Math.round(h.size * 1.4 + R() * 0.9));
+      for (let o = -182; o <= 13; o++) {
+        const d = dt(o), dw = d.getUTCDay(); if (dw > 4) continue;
+        const leave = R() < 0.07 ? 1 : 0, clin = base - leave, cap = clin * SLOTS, planned = base * SLOTS;
+        let fill = 0.74 + 0.22 * R() + (dw === 0 ? 0.05 : 0); if (R() < 0.1) fill = 1.03 + 0.12 * R();
+        if (o >= 0 && o > 2) fill *= Math.max(0.5, 1 - 0.03 * o);
+        const booked = Math.round(planned * fill), load = cap > 0 ? booked / cap : 2;
+        const cd = { key: h.id + '|' + c.id + '|' + o, h: h.id, c: c.id, o, dw, date: iso(d), clin, cap, planned, booked, leave, appts: [] };
+        cdays.push(cd);
+        for (let k = 0; k < booked; k++) {
+          const slot = k % SLOTS, hour = 8 + Math.floor(slot / 3);
+          let lead = Math.floor(-Math.log(1 - R()) * 11); if (o >= 0) lead += o;
+          let a017 = 0, a1839 = 0, a65 = 0; const ra = R();
+          if (c.id === 'PD') a017 = 1; else if (c.id === 'OB') a1839 = ra < 0.7 ? 1 : 0;
+          else { a017 = ra < 0.05 ? 1 : 0; a1839 = ra >= 0.05 && ra < 0.35 ? 1 : 0; a65 = ra >= 0.75 ? 1 : 0; }
+          const prev = Math.min(4, poisson(0.35)), rem = R() < 0.7 ? 1 : 0, rd = R(), mid = rd >= 0.5 && rd < 0.82 ? 1 : 0, far = rd >= 0.82 ? 1 : 0;
+          const isNew = R() < 0.3 ? 1 : 0, urg = R() < 0.07 ? 1 : 0, pm = hour >= 12 ? 1 : 0, sun = dw === 0 ? 1 : 0, thu = dw === 4 ? 1 : 0;
+          const x = [1, lead / 30, prev, rem, a017, a1839, a65, mid, far, isNew, urg, pm, sun, thu];
+          const a = { id: 'P-' + (100000 + Math.floor(R() * 899999)), h: h.id, c: c.id, o, dw, hour, slot, urg, x, ns: null, wait: null, p: null, cd: cd.key };
+          if (o < 0) {
+            const z = -2.05 + 0.028 * lead + 0.5 * prev - 0.55 * rem + 0.15 * a017 + 0.35 * a1839 - 0.35 * a65 + 0.15 * mid + 0.45 * far + 0.25 * isNew - 1.1 * urg + 0.3 * pm + 0.25 * sun + 0.2 * thu + cEff[c.id] + 0.6 * randn();
+            a.ns = R() < sig(z) ? 1 : 0;
+            if (!a.ns) a.wait = Math.max(2, Math.round(9 + 28 * Math.max(0, load - 0.85) + 0.9 * slot * Math.max(0, load - 0.65) + 5 * randn()));
+          }
+          appts.push(a); cd.appts.push(a);
+        }
+      }
+    }
+    const train = appts.filter(a => a.o < -30), test = appts.filter(a => a.o < 0 && a.o >= -30);
+    const w = logit(train.map(a => a.x), train.map(a => a.ns), 1);
+    for (const a of appts) if (a.o >= -30) a.p = sig(dot(w, a.x));
+    const rates = {};
+    for (const a of train) { const k = a.h + '|' + a.c; rates[k] = rates[k] || [0, 0]; rates[k][0] += a.ns; rates[k][1]++; }
+    const pB = test.map(a => rates[a.h + '|' + a.c][0] / rates[a.h + '|' + a.c][1]), pM = test.map(a => a.p), yT = test.map(a => a.ns);
+    const order = pM.map((v, i) => i).sort((a, b) => pM[a] - pM[b]), calib = [];
+    for (let q = 0; q < 10; q++) { const sl = order.slice(Math.floor(q * order.length / 10), Math.floor((q + 1) * order.length / 10)); calib.push({ pred: mean(sl.map(i => pM[i])), obs: mean(sl.map(i => yT[i])), n: sl.length }); }
+    const evalF = { aucModel: auc(pM, yT), aucBase: auc(pB, yT), brierModel: brier(pM, yT), brierBase: brier(pB, yT), rate: mean(yT), nTrain: train.length, nTest: test.length, calib, w };
+    for (const cd of cdays) if (cd.o >= 0) {
+      cd.expected = sum(cd.appts.map(a => 1 - a.p));
+      cd.highRisk = cd.appts.filter(a => a.p >= 0.35).length;
+      cd.excess = Math.max(0, cd.booked - cd.cap);
+      cd.free = Math.max(0, cd.cap - cd.booked);
+    }
+    return { appts, cdays, eval: evalF };
+  }
+
+  /* ---------- الوحدة الثانية: الأسرّة ---------- */
+  function bfeat(occ, i) { const d = dt(i - BH), w = d.getUTCDay(), a = 2 * Math.PI * doy(d) / 365.25, f = [1, occ]; for (let k = 0; k < 7; k++) if (k !== 3) f.push(w === k ? 1 : 0); f.push(Math.sin(a), Math.cos(a)); return f; }
+  function fitBeds(occ, end) { const X = [], Y = []; for (let t = 1; t < end; t++) { X.push(bfeat(occ[t - 1], t)); Y.push(occ[t]); } return ridge(X, Y, 0.1); }
+  function fcBeds(w, occ0, t0, hz) { const out = []; let o = occ0; for (let h = 1; h <= hz; h++) { o = Math.min(1, Math.max(0, dot(w, bfeat(o, t0 + h)))); out.push(o); } return out; }
+  function buildBeds() {
+    const units = []; let e1 = 0, e7 = 0, p1 = 0, p7 = 0, n = 0;
+    for (const h of HOSP) for (const dp of DEPTS) {
+      const cap = Math.max(4, Math.round(dp.base * h.size)), unst = dp.noSub ? 0 : Math.floor(R() * 3), staffed = cap - unst;
+      const lam = staffed * dp.target / dp.los, hist = [];
+      let census = Math.round(staffed * dp.target), queue = 0;
+      for (let i = 0; i < BH; i++) {
+        const d = dt(i - BH), w = d.getUTCDay(), a = 2 * Math.PI * doy(d) / 365.25;
+        const dowF = dp.id === 'SUR' ? [1.15, 1.15, 1.1, 1.1, 1.0, 0.5, 0.6][w] : [1.05, 1.05, 1, 1, 1, 0.9, 0.95][w];
+        const sea = 1 + dp.season * Math.cos(a - 2 * Math.PI * 20 / 365.25);
+        const adm = poisson(lam * dowF * sea); let dis = 0;
+        for (let k = 0; k < census; k++) if (R() < 1 / dp.los) dis++;
+        const c = census - dis + adm + queue; queue = Math.max(0, c - staffed); census = Math.min(c, staffed);
+        hist.push({ census, adm, dis, queue, occ: census / staffed });
+      }
+      const occ = hist.map(x => x.occ);
+      const we = fitBeds(occ, 305);
+      for (let t0 = 304; t0 <= BH - 8; t0++) {
+        const f = fcBeds(we, occ[t0], t0, 7);
+        e1 += Math.abs(f[0] - occ[t0 + 1]) * staffed; e7 += Math.abs(f[6] - occ[t0 + 7]) * staffed;
+        p1 += Math.abs(occ[t0] - occ[t0 + 1]) * staffed; p7 += Math.abs(occ[t0] - occ[t0 + 7]) * staffed; n++;
+      }
+      const wf = fitBeds(occ, BH), fc = fcBeds(wf, occ[BH - 1], BH - 1, 7);
+      const last = hist[BH - 1], blocked = Math.min(Math.max(0, staffed - last.census), Math.floor(R() * 2.5));
+      const u = { key: h.id + '|' + dp.id, h: h.id, d: dp.id, hosp: h, dept: dp, cap, staffed, hist, fc: fc.map(x => x * staffed), fcOcc: fc, census: last.census, queue: last.queue, blocked, vacant: Math.max(0, staffed - last.census - blocked), meanAdm: mean(hist.slice(-28).map(x => x.adm)), meanDis: mean(hist.slice(-28).map(x => x.dis)) };
+      const thr = dp.noSub ? 0.9 : 0.92; u.thr = thr;
+      u.congest = fc.slice(0, 3).some(x => x >= thr);
+      units.push(u);
+    }
+    return { units, eval: { maeModel1: e1 / n, maeModel7: e7 / n, maePers1: p1 / n, maePers7: p7 / n, origins: n } };
+  }
+
+  /* ---------- التوصيات والتنبيهات ---------- */
+  function buildRecs(meds, flow, beds) {
+    const recs = [], alerts = [], hn = id => HOSP.find(h => h.id === id).name;
+    const fmt = x => Math.round(x).toLocaleString('en-US');
+    for (const s of meds.series) {
+      if (s.risk === 'crit' || s.risk === 'high') {
+        alerts.push({ id: 'A-S-' + s.key, module: 'med', sev: s.risk, basis: 'pred', fac: s.h, title: (s.risk === 'crit' ? 'نفاد متوقع قبل وصول أي طلب جديد: ' : 'المخزون دون حد إعادة الطلب: ') + s.med.name, ref: { type: 'series', key: s.key } });
+        recs.push({ id: 'R-ORD-' + s.key, module: 'med', type: 'reorder', basis: 'pred', sev: s.risk, fac: s.h, ref: { type: 'series', key: s.key },
+          title: 'إعادة طلب ' + s.med.name, summary: 'اقتراح طلب ' + fmt(s.suggestQty) + ' ' + s.med.unit + ' من ' + SUPPLIERS[s.med.sup] + ' (افتراضي)، مهلة التوريد ' + s.L + ' يوماً.',
+          constraints: ['يتطلب موافقة صيدلي مخوّل قبل إرسال أي أمر شراء.', s.med.controlled ? 'مادة مراقبة: تخضع لإجراءات صرف وتوريد خاصة وموافقات إضافية.' : 'التحقق من الميزانية وعقود التوريد المعتمدة.'] });
+      }
+    }
+    // النقل بين المنشآت
+    for (const m of MEDS) {
+      const ss = meds.series.filter(s => s.m === m.id);
+      const needers = ss.filter(s => s.risk === 'crit' || s.risk === 'high');
+      const donors = ss.filter(s => s.risk === 'low' && s.surplus > 0).map(s => ({ s, left: s.surplus }));
+      for (const nd of needers) {
+        const need = Math.max(0, Math.round(nd.rop - nd.position + nd.avg30 * 14));
+        donors.sort((a, b) => b.left - a.left); const dn = donors[0];
+        if (!dn || dn.left <= 0 || need <= 0) continue;
+        const q = Math.min(dn.left, need); dn.left -= q;
+        recs.push({ id: 'R-TRF-' + dn.s.key + '-' + nd.h, module: 'med', type: 'transfer', basis: 'mixed', sev: nd.risk, fac: nd.h, ref: { type: 'series', key: nd.key }, from: dn.s.h,
+          title: 'نقل فائض ' + m.name + ' من ' + hn(dn.s.h) + ' إلى ' + hn(nd.h),
+          summary: 'كمية مقترحة ' + fmt(q) + ' ' + m.unit + '. يبقى لدى المنشأة المانحة مخزون يغطي 60 يوماً على الأقل وفق الطلب المتوقع.',
+          constraints: ['يتطلب موافقة صيدلي مخوّل في المنشأتين.', 'النقل بين منشآت مخوّلة فقط وضمن السياسات المعتمدة.', m.cold ? 'يتطلب الحفاظ على سلسلة التبريد أثناء النقل.' : 'التحقق من رقم التشغيلة وتاريخ الانتهاء عند الاستلام.', m.controlled ? 'مادة مراقبة: النقل يخضع لإجراءات وموافقات خاصة.' : ''].filter(Boolean) });
+      }
+    }
+    // الانتهاء (قاعدة FEFO)
+    for (const s of meds.series) for (const lt of s.lots) {
+      const val = lt.atRisk * s.med.price;
+      if (lt.expired && lt.qty > 0) alerts.push({ id: 'A-X-' + lt.lot, module: 'med', sev: 'med', basis: 'rule', fac: s.h, title: 'تشغيلة منتهية الصلاحية بانتظار الإتلاف: ' + s.med.name, ref: { type: 'series', key: s.key } });
+      else if (lt.atRisk > 0 && lt.off <= 120 && val >= 20) {
+        alerts.push({ id: 'A-E-' + lt.lot, module: 'med', sev: lt.off <= 45 ? 'high' : 'med', basis: 'rule', fac: s.h, title: 'كمية معرّضة للانتهاء خلال ' + lt.off + ' يوماً: ' + s.med.name, ref: { type: 'series', key: s.key } });
+        recs.push({ id: 'R-EXP-' + lt.lot, module: 'med', type: 'expiry', basis: 'rule', sev: lt.off <= 45 ? 'high' : 'med', fac: s.h, ref: { type: 'series', key: s.key },
+          title: 'أولوية صرف أو إعادة توزيع: ' + s.med.name, summary: 'التشغيلة ' + lt.lot + ': ' + fmt(lt.atRisk) + ' ' + s.med.unit + ' لن تُستهلك قبل الانتهاء وفق الطلب المتوقع (قيمة تقريبية ' + fmt(val) + ' د.أ).',
+          constraints: ['صرف الأقدم انتهاءً أولاً (FEFO) دون تغيير أي قرار علاجي.', 'إعادة التوزيع لمنشآت مخوّلة فقط وبموافقة صيدلي.'] });
+      }
+    }
+    // العيادات: سعة مؤكدة فقط
+    const fut = flow.cdays.filter(c => c.o >= 0);
+    const byClinic = {}; for (const c of fut) (byClinic[c.h + '|' + c.c] = byClinic[c.h + '|' + c.c] || []).push(c);
+    for (const k in byClinic) {
+      const days = byClinic[k].sort((a, b) => a.o - b.o), used = {};
+      for (const d of days) {
+        if (d.excess <= 0 || d.o > 9) continue;
+        const movable = d.appts.filter(a => !a.urg).length; let need = Math.min(d.excess, movable);
+        const moves = [];
+        for (const t of days) {
+          if (t.o <= d.o || t.o > d.o + 10 || t.clin === 0 || need <= 0) continue;
+          const free = t.cap - t.booked - (used[t.key] || 0);
+          if (free <= 0) continue;
+          const q = Math.min(free, need); used[t.key] = (used[t.key] || 0) + q; need -= q; moves.push({ date: t.date, o: t.o, q });
+        }
+        const cl = CLINICS.find(c => c.id === d.c).name, urgent = d.appts.filter(a => a.urg).length;
+        alerts.push({ id: 'A-C-' + d.key, module: 'flow', sev: d.excess >= 8 ? 'high' : 'med', basis: 'rule', fac: d.h, title: 'حجوزات تتجاوز السعة في عيادة ' + cl + ' يوم ' + d.date, ref: { type: 'cday', key: d.key } });
+        recs.push({ id: 'R-RSC-' + d.key, module: 'flow', type: 'reschedule', basis: 'rule', sev: d.excess >= 8 ? 'high' : 'med', fac: d.h, ref: { type: 'cday', key: d.key }, moves, unresolved: need,
+          title: 'إعادة جدولة مواعيد روتينية — عيادة ' + cl + ' (' + d.date + ')',
+          summary: 'الحجوزات ' + d.booked + ' مقابل سعة ' + d.cap + (d.leave ? ' (غياب طبيب مسجّل في جدول المناوبات)' : '') + '. ' + (moves.length ? 'مواعيد بديلة متاحة فعلياً في: ' + moves.map(m => m.date + ' (' + m.q + ')').join('، ') + '.' : 'لا توجد سعة مؤكدة خلال 10 أيام.') + (need > 0 ? ' يبقى ' + need + ' موعداً دون بديل مؤكد ويحتاج قراراً إدارياً.' : ''),
+          constraints: ['لا يُنقل أي موعد عاجل (' + urgent + ' موعداً عاجلاً مستثنى في هذا اليوم).', 'البدائل من العيادة والتخصص نفسيهما وفي أيام يوجد فيها طبيب على جدول المناوبات.', 'السعة البديلة = السعة المجدولة ناقص الحجوزات؛ لا يُفترض تحرير مقاعد بسبب الغياب المتوقع.', 'يتطلب موافقة المريض ومراجعة الطبيب المعالج.'] });
+      }
+    }
+    for (const d of fut) {
+      if (d.o > 4 || d.highRisk < 4) continue;
+      const cl = CLINICS.find(c => c.id === d.c).name;
+      recs.push({ id: 'R-REM-' + d.key, module: 'flow', type: 'reminder', basis: 'pred', sev: 'low', fac: d.h, ref: { type: 'cday', key: d.key },
+        title: 'اتصال تذكير — عيادة ' + cl + ' (' + d.date + ')',
+        summary: d.highRisk + ' موعداً بخطر غياب مقدَّر ≥ 35٪ وفق النموذج. الحضور المتوقع ' + Math.round(d.expected) + ' من ' + d.booked + ' حجزاً.',
+        constraints: ['التذكير إجراء تواصلي فقط؛ لا يُلغى أي موعد ولا يُحجز فوقه تلقائياً.', 'درجة الخطر تقدير إحصائي وليست حكماً على المريض.'] });
+    }
+    // الأسرّة
+    for (const u of beds.units) if (u.congest) {
+      const peak = Math.max(...u.fcOcc.slice(0, 3));
+      alerts.push({ id: 'A-B-' + u.key, module: 'flow', sev: peak >= 0.98 ? 'crit' : 'high', basis: 'pred', fac: u.h, title: 'ازدحام متوقع في قسم ' + u.dept.name + ' خلال 3 أيام', ref: { type: 'bed', key: u.key } });
+      recs.push({ id: 'R-BED-' + u.key, module: 'flow', type: 'capacity', basis: 'pred', sev: peak >= 0.98 ? 'crit' : 'high', fac: u.h, ref: { type: 'bed', key: u.key },
+        title: 'مراجعة خطط الخروج والسعة — ' + u.dept.name,
+        summary: 'الإشغال المتوقع يصل إلى ' + Math.round(peak * 100) + '٪ من الأسرّة المشغّلة بكادر (' + u.staffed + ' سريراً). يُقترح اجتماع تنسيق لمراجعة الخروج المخطط وجاهزية الكوادر.',
+        constraints: ['لا يُعاد توجيه أي مريض طوارئ ولا تُؤجَّل رعاية عاجلة.', u.dept.noSub ? 'أسرّة هذا القسم غير قابلة للاستبدال بأسرّة أقسام أخرى.' : 'أي نقل بين الأقسام يراعي التخصص والعزل ونسب التمريض.', 'قرار الخروج سريري يتخذه الطبيب المعالج فقط.'] });
+    }
+    const sevRank = { crit: 0, high: 1, med: 2, low: 3 };
+    alerts.sort((a, b) => sevRank[a.sev] - sevRank[b.sev]); recs.sort((a, b) => sevRank[a.sev] - sevRank[b.sev]);
+    return { recs, alerts };
+  }
+
+  function build() {
+    R = rng(20261009);
+    const t0 = Date.now();
+    const meds = buildMeds(), flow = buildFlow(), beds = buildBeds(), rb = buildRecs(meds, flow, beds);
+    return { meds, flow, beds, recs: rb.recs, alerts: rb.alerts, ms: Date.now() - t0 };
+  }
+  return { build, HOSP, MEDS, CLINICS, DEPTS, SUPPLIERS, dt, iso, H, BH, HOLD, SLOTS, mean, sum };
+})();
+
+
+</script>
+<script>
+/* ===== واجهة المستخدم ===== */
+let S = null;
+const state = { view: 'overview', role: 'admin', fac: 'ALL', medCat: 'ALL', range: 180, sel: null, flowTab: 'clinics', clinic: 'ALL', dept: 'MED', noon: 20, early: 0, recStatus: 'pending', recModule: 'ALL' };
+const ROLES = { admin: 'مدير النظام', pharm: 'صيدلي مخوّل', ops: 'مدير العمليات' };
+const NAV = [['overview', 'نظرة عامة'], ['meds', 'الأدوية والمستلزمات'], ['flow', 'تدفق المرضى والسعة'], ['recs', 'التوصيات والمراجعة'], ['audit', 'سجل التدقيق'], ['method', 'المنهجية والقيود']];
+const RISK = { crit: 'حرج', high: 'مرتفع', med: 'متوسط', low: 'منخفض' };
+const STATUS = { pending: 'بانتظار المراجعة', approved: 'معتمدة', rejected: 'مرفوضة', deferred: 'مؤجّلة' };
+const TYPES = { reorder: 'إعادة طلب', transfer: 'نقل بين المنشآت', expiry: 'إدارة الانتهاء', reschedule: 'إعادة جدولة', reminder: 'تذكير بالموعد', capacity: 'سعة الأسرّة' };
+const BASIS = { pred: '<span class="tag t-pred">تنبؤ نموذج</span>', rule: '<span class="tag t-rule">قاعدة حسابية</span>', mixed: '<span class="tag t-pred">تنبؤ نموذج</span> <span class="tag t-rule">قاعدة حسابية</span>' };
+const TAG = { syn: '<span class="tag t-syn">بيانات تجريبية</span>', pred: '<span class="tag t-pred">تنبؤ نموذج</span>', rule: '<span class="tag t-rule">قاعدة حسابية</span>', sim: '<span class="tag t-sim">نتيجة محاكاة</span>' };
+const DOWN = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+
+const nf = (n, d = 0) => Number(n).toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d });
+const jod = n => nf(n) + ' د.أ';
+const pct = (x, d = 1) => nf(x * 100, d) + '٪';
+const dShort = new Intl.DateTimeFormat('ar-JO-u-nu-latn', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+const dLong = new Intl.DateTimeFormat('ar-JO-u-nu-latn', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
+const tFmt = new Intl.DateTimeFormat('ar-JO-u-nu-latn', { dateStyle: 'medium', timeStyle: 'short' });
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const hName = id => E.HOSP.find(h => h.id === id).name;
+const inFac = id => state.fac === 'ALL' || state.fac === id;
+const risk = r => `<span class="risk r-${r}">${RISK[r]}</span>`;
+const dayLbl = o => dShort.format(E.dt(o));
+
+/* ---------- التخزين المحلي (اختياري، يعمل فقط للمستخدم الحالي) ---------- */
+const LS = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { } } };
+let reviews = {}, audit = [];
+const HIST = [
+  { id: 'HIST-1', module: 'med', type: 'reorder', basis: 'pred', sev: 'high', fac: 'H2', title: 'إعادة طلب سيفترياكسون 1 غ (حقن)', summary: 'سجل سابق تجريبي لعرض دورة المراجعة.', constraints: [], hist: { status: 'approved', role: 'pharm', note: 'تمت الموافقة بعد التحقق من الميزانية.', time: '2026-09-22T09:14:00' } },
+  { id: 'HIST-2', module: 'med', type: 'transfer', basis: 'mixed', sev: 'med', fac: 'H4', title: 'نقل فائض محلول ملحي 0.9% من مستشفى الهضبة الحكومي إلى مستشفى خليج المرجان', summary: 'سجل سابق تجريبي.', constraints: [], hist: { status: 'rejected', role: 'pharm', note: 'رُفض: تكلفة النقل إلى العقبة أعلى من قيمة الكمية.', time: '2026-09-25T11:02:00' } },
+  { id: 'HIST-3', module: 'flow', type: 'reschedule', basis: 'rule', sev: 'med', fac: 'H1', title: 'إعادة جدولة مواعيد روتينية — عيادة القلب', summary: 'سجل سابق تجريبي.', constraints: [], hist: { status: 'approved', role: 'ops', note: 'نُفّذت بعد موافقة المرضى هاتفياً (12 من 14).', time: '2026-09-28T13:40:00' } },
+  { id: 'HIST-4', module: 'flow', type: 'capacity', basis: 'pred', sev: 'high', fac: 'H3', title: 'مراجعة خطط الخروج والسعة — الباطنية', summary: 'سجل سابق تجريبي.', constraints: [], hist: { status: 'deferred', role: 'ops', note: 'أُجّلت لحين اجتماع رؤساء الأقسام.', time: '2026-10-01T08:30:00' } }
+];
+function loadStore() {
+  reviews = LS.get('jhrm-reviews-v1', {});
+  audit = LS.get('jhrm-audit-v1', null);
+  if (!audit) {
+    audit = [
+      ...HIST.map(h => ({ time: h.hist.time, role: h.hist.role, action: 'مراجعة توصية: ' + STATUS[h.hist.status], target: h.title, note: h.hist.note, seed: true })),
+      { time: '2026-10-08T23:50:00', role: 'system', action: 'توليد البيانات التجريبية وتدريب النماذج', target: 'جميع الوحدات', note: 'بذرة عشوائية ثابتة 20261009', seed: true }
+    ];
+  }
+}
+const saveStore = () => { LS.set('jhrm-reviews-v1', reviews); LS.set('jhrm-audit-v1', audit); };
+const recStatus = r => r.hist ? r.hist.status : (reviews[r.id] ? reviews[r.id].status : 'pending');
+const allRecs = () => [...S.recs, ...HIST];
+const canReview = r => state.role === 'admin' || (state.role === 'pharm' && r.module === 'med') || (state.role === 'ops' && r.module === 'flow');
+function logAction(action, target, note) { audit.push({ time: new Date().toISOString(), role: state.role, action, target, note: note || '' }); saveStore(); }
+
+/* ---------- الرسوم البيانية ---------- */
+const charts = {};
+const cssv = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+function killCharts() { for (const k in charts) { charts[k].destroy(); delete charts[k]; } }
+function chart(id, cfg) {
+  const el = document.getElementById(id); if (!el) return;
+  if (typeof Chart === 'undefined') { el.parentElement.innerHTML = '<p class="empty">تعذّر تحميل مكتبة الرسوم البيانية. تحقق من الاتصال ثم أعد تحميل الصفحة.</p>'; return; }
+  if (charts[id]) charts[id].destroy();
+  Chart.defaults.font.family = '"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif';
+  Chart.defaults.color = cssv('--muted'); Chart.defaults.borderColor = cssv('--line');
+  cfg.options = Object.assign({ responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: 'index', intersect: false } }, cfg.options || {});
+  cfg.options.plugins = Object.assign({ legend: { rtl: true, labels: { boxWidth: 14, usePointStyle: false } }, tooltip: { rtl: true, textDirection: 'rtl' } }, cfg.options.plugins || {});
+  charts[id] = new Chart(el, cfg);
+}
+const line = (label, data, color, dash, extra) => Object.assign({ label, data, borderColor: color, backgroundColor: color, borderWidth: 2, pointRadius: 0, borderDash: dash || [], spanGaps: false, tension: 0.15 }, extra || {});
+
+function seriesChart(id, s, range) {
+  const H = E.H, from = H - range, labels = [], act = [], fc = [], base = [], bt = [];
+  for (let i = from; i < H + 60; i++) {
+    labels.push(dayLbl(i - H));
+    act.push(i < H ? s.y[i] : null);
+    fc.push(i >= H - 1 ? (i === H - 1 ? s.y[i] : s.fc[i - H]) : null);
+    base.push(i >= H ? s.ma28 : null);
+    bt.push(i >= H - E.HOLD && i < H ? s.evalPred[i - (H - E.HOLD)] : null);
+  }
+  chart(id, { type: 'line', data: { labels, datasets: [
+    line('الاستهلاك اليومي (تجريبي)', act, cssv('--ink'), [], { borderWidth: 1.2 }),
+    line('اختبار النموذج على آخر 56 يوماً', bt, cssv('--pred'), [2, 3], { borderWidth: 1.5 }),
+    line('الطلب المتوقع (تنبؤ النموذج)', fc, cssv('--pred'), [6, 4]),
+    line('خط الأساس: متوسط 28 يوماً', base, cssv('--muted'), [3, 3], { borderWidth: 1.5 })
+  ] }, options: { scales: { x: { ticks: { maxTicksLimit: 10 } }, y: { beginAtZero: true, title: { display: true, text: s.med.unit + ' / يوم' } } } } });
+}
+
+/* ---------- الهيكل ---------- */
+function shell() {
+  const pend = allRecs().filter(r => recStatus(r) === 'pending' && inFac(r.fac)).length;
+  document.getElementById('nav').innerHTML = NAV.map(([k, v]) => `<button data-view="${k}" ${state.view === k ? 'aria-current="page"' : ''}><span>${v}</span>${k === 'recs' && pend ? `<span class="count num">${pend}</span>` : ''}</button>`).join('');
+  document.getElementById('pageTitle').textContent = NAV.find(n => n[0] === state.view)[1];
+}
+function render() {
+  killCharts(); shell();
+  const v = VIEWS[state.view]();
+  document.getElementById('content').innerHTML = v.html;
+  if (v.after) v.after();
+}
+
+/* ---------- نظرة عامة ---------- */
+function bedsAgg(units) { const st = E.sum(units.map(u => u.staffed)), oc = E.sum(units.map(u => u.census)); return { st, oc, occ: st ? oc / st : 0 }; }
+function noShow(days) { const a = S.flow.appts.filter(x => x.o < 0 && x.o >= -days && inFac(x.h) && (state.clinic === 'ALL' || x.c === state.clinic)); return { rate: a.length ? E.mean(a.map(x => x.ns)) : 0, n: a.length, wait: E.mean(a.filter(x => x.wait != null).map(x => x.wait)), att: a.filter(x => !x.ns).length }; }
+
+const VIEWS = {};
+VIEWS.overview = () => {
+  const ser = S.meds.series.filter(s => inFac(s.h)), units = S.beds.units.filter(u => inFac(u.h));
+  const crit = ser.filter(s => s.risk === 'crit').length, high = ser.filter(s => s.risk === 'high').length;
+  const exp90 = E.sum(ser.map(s => s.expiring90 * s.med.price)), expired = E.sum(ser.map(s => s.expiredQty * s.med.price));
+  const b = bedsAgg(units), cong = units.filter(u => u.congest).length, ns = noShow(30);
+  const al = S.alerts.filter(a => inFac(a.fac));
+  const pend = allRecs().filter(r => recStatus(r) === 'pending' && inFac(r.fac)).length;
+  return {
+    html: `
+    <p class="lead">لوحة موحّدة لموارد الأدوية وسعة المستشفيات. آخر نقطة في البيانات التجريبية: نهاية يوم ${dLong.format(E.dt(-1))}. هذه ليست قراءات حيّة من أنظمة المستشفيات.</p>
+    <div class="kpis">
+      <div class="kpi"><span class="lbl">أصناف بخطر نقص حرج</span><span class="val">${crit} <small>+ ${high} مرتفع</small></span>${TAG.pred}</div>
+      <div class="kpi"><span class="lbl">مخزون معرّض للانتهاء خلال 90 يوماً</span><span class="val">${jod(exp90)}</span>${TAG.rule}</div>
+      <div class="kpi"><span class="lbl">مخزون منتهٍ بانتظار الإتلاف</span><span class="val">${jod(expired)}</span>${TAG.syn}</div>
+      <div class="kpi"><span class="lbl">إشغال الأسرّة المشغّلة بكادر</span><span class="val">${pct(b.occ)}</span><span class="cmp num">${b.oc} من ${b.st} سريراً — آخر قياس مسجّل</span>${TAG.syn}</div>
+      <div class="kpi"><span class="lbl">أقسام يُتوقع ازدحامها خلال 3 أيام</span><span class="val">${cong}</span>${TAG.pred}</div>
+      <div class="kpi"><span class="lbl">نسبة عدم الحضور (آخر 30 يوماً)</span><span class="val">${pct(ns.rate)}</span><span class="cmp num">${nf(ns.n)} موعداً</span>${TAG.syn}</div>
+      <div class="kpi"><span class="lbl">توصيات بانتظار المراجعة</span><span class="val">${pend}</span><button class="btn link" data-view="recs">فتح قائمة المراجعة</button></div>
+    </div>
+    <div class="grid2">
+      <section class="panel"><h2>التنبيهات النشطة <span class="num" style="color:var(--muted);font-weight:500">(${al.length})</span></h2>
+        <p class="sub">اختر «لماذا؟» لعرض البيانات والحسابات التي أطلقت التنبيه.</p>
+        <div class="scroll">${alertList(al)}</div></section>
+      <div style="display:grid;gap:18px">
+        <section class="panel"><h2>مستوى خطر النقص حسب المنشأة ${TAG.pred}</h2><p class="sub">عدد الأصناف في كل مستوى خطر، وفق الطلب المتوقع ومهلة التوريد.</p><div class="chart sm"><canvas id="ovRisk"></canvas></div></section>
+        <section class="panel"><h2>إشغال الأقسام: آخر قياس مقابل التوقع بعد 3 أيام</h2><p class="sub">نسبةً إلى الأسرّة المشغّلة بكادر. الأعمدة المخططة تمثّل تنبؤاً وليست قياساً.</p><div class="chart sm"><canvas id="ovBeds"></canvas></div></section>
+      </div>
+    </div>`,
+    after() {
+      const hs = E.HOSP.filter(h => inFac(h.id));
+      chart('ovRisk', { type: 'bar', data: { labels: hs.map(h => h.name), datasets: ['crit', 'high', 'med', 'low'].map(r => ({ label: RISK[r], data: hs.map(h => S.meds.series.filter(s => s.h === h.id && s.risk === r).length), backgroundColor: cssv({ crit: '--crit', high: '--high', med: '--medr', low: '--ok' }[r]) })) }, options: { scales: { x: { stacked: true }, y: { stacked: true, ticks: { precision: 0 } } } } });
+      const ds = E.DEPTS, now = ds.map(d => bedsAgg(units.filter(u => u.d === d.id)).occ * 100);
+      const f3 = ds.map(d => { const us = units.filter(u => u.d === d.id), st = E.sum(us.map(u => u.staffed)); return st ? E.sum(us.map(u => u.fc[2])) / st * 100 : 0; });
+      const stripe = makeStripe(cssv('--pred'));
+      chart('ovBeds', { type: 'bar', data: { labels: ds.map(d => d.name), datasets: [{ label: 'آخر قياس (تجريبي)', data: now, backgroundColor: cssv('--primary') }, { label: 'تنبؤ بعد 3 أيام', data: f3, backgroundColor: stripe, borderColor: cssv('--pred'), borderWidth: 1 }] }, options: { scales: { y: { min: 0, max: 100, ticks: { callback: v => v + '٪' } } } } });
+    }
+  };
+};
+function makeStripe(color) {
+  const c = document.createElement('canvas'); c.width = c.height = 8; const x = c.getContext && c.getContext('2d'); if (!x) return color;
+  x.strokeStyle = color; x.lineWidth = 2; x.beginPath(); x.moveTo(0, 8); x.lineTo(8, 0); x.stroke();
+  return x.createPattern(c, 'repeat');
+}
+function alertList(al) {
+  if (!al.length) return '<p class="empty">لا توجد تنبيهات للمنشأة المختارة.</p>';
+  return `<ul class="alerts">${al.map(a => `<li>${risk(a.sev)}<div><div>${esc(a.title)}</div><div class="meta">${hName(a.fac)} · ${a.module === 'med' ? 'الأدوية' : 'تدفق المرضى'} · ${a.basis === 'pred' ? 'مصدره تنبؤ نموذج' : 'مصدره قاعدة حسابية'}</div></div><button class="btn" data-why="${esc(a.ref.type)}|${esc(a.ref.key)}">لماذا؟</button></li>`).join('')}</ul>`;
+}
+
+/* ---------- الأدوية ---------- */
+VIEWS.meds = () => {
+  const cats = [...new Set(E.MEDS.map(m => m.cat))];
+  const ser = S.meds.series.filter(s => inFac(s.h) && (state.medCat === 'ALL' || s.med.cat === state.medCat));
+  const rk = { crit: 0, high: 1, med: 2, low: 3 };
+  ser.sort((a, b) => rk[a.risk] - rk[b.risk] || (a.daysToZero ?? 999) - (b.daysToZero ?? 999));
+  if (!state.sel || !ser.find(s => s.key === state.sel)) state.sel = ser[0] && ser[0].key;
+  const sel = S.meds.series.find(s => s.key === state.sel);
+  const ev = S.meds.eval;
+  const simB = E.sum(ser.map(s => s.sim.base.so)), simF = E.sum(ser.map(s => s.sim.fc.so));
+  const invB = E.sum(ser.map(s => s.sim.base.invVal)), invF = E.sum(ser.map(s => s.sim.fc.invVal));
+  const unB = E.sum(ser.map(s => s.sim.base.unmetVal)), unF = E.sum(ser.map(s => s.sim.fc.unmetVal));
+  const exp90 = E.sum(ser.map(s => s.expiring90 * s.med.price)), expired = E.sum(ser.map(s => s.expiredQty * s.med.price));
+  const annual = E.sum(ser.map(s => E.sum(s.y.slice(E.H - 365)) * s.med.price)), invNow = E.sum(ser.map(s => s.stock * s.med.price));
+  const lots = []; for (const s of ser) for (const l of s.lots) if (l.atRisk > 0) lots.push({ s, l });
+  lots.sort((a, b) => a.l.off - b.l.off);
+  return {
+    html: `
+    <div class="filters">
+      <label class="field">فئة الصنف<select id="fCat"><option value="ALL">كل الفئات</option>${cats.map(c => `<option ${state.medCat === c ? 'selected' : ''}>${c}</option>`).join('')}</select></label>
+      <label class="field">فترة الرسم البياني<select id="fRange">${[[90, 'آخر 90 يوماً'], [180, 'آخر 180 يوماً'], [365, 'آخر سنة']].map(([v, t]) => `<option value="${v}" ${state.range == v ? 'selected' : ''}>${t}</option>`).join('')}</select></label>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><span class="lbl">أصناف بخطر حرج / مرتفع</span><span class="val">${ser.filter(s => s.risk === 'crit').length} <small>/ ${ser.filter(s => s.risk === 'high').length}</small></span>${TAG.pred}</div>
+      <div class="kpi"><span class="lbl">خطأ تنبؤ الطلب (WAPE)</span><span class="val">${pct(ev.wapeModel)}</span><span class="cmp">خط الأساس (متوسط 28 يوماً): ${pct(ev.wapeBase)}</span>${TAG.pred}</div>
+      <div class="kpi"><span class="lbl">معرّض للانتهاء خلال 90 يوماً</span><span class="val">${jod(exp90)}</span>${TAG.rule}</div>
+      <div class="kpi"><span class="lbl">منتهي الصلاحية بانتظار الإتلاف</span><span class="val">${jod(expired)}</span>${TAG.syn}</div>
+      <div class="kpi"><span class="lbl">دوران المخزون التقريبي</span><span class="val">${nf(annual / Math.max(1, invNow), 1)} <small>مرة/سنة</small></span><span class="cmp">استهلاك سنة ÷ قيمة المخزون الحالي</span>${TAG.syn}</div>
+      <div class="kpi"><span class="lbl">أيام النفاد في محاكاة 120 يوماً</span><span class="val">${simF} <small>مقابل ${simB} لخط الأساس</small></span>${TAG.sim}</div>
+    </div>
+    <section class="panel"><h2>المخزون وخطر النقص</h2>
+      <p class="sub">مرتّب حسب الخطر. اختر صفاً لعرض منحنى الطلب في الأسفل، أو «تفاصيل» لعرض الحساب كاملاً. الكمية المقترحة لا تُرسل لأي مورّد قبل موافقة صيدلي مخوّل.</p>
+      <div class="tbl scroll"><table><thead><tr><th>الصنف</th><th>المنشأة</th><th>المخزون</th><th>قيد التوريد</th><th>حد إعادة الطلب</th><th>الطلب اليومي المتوقع</th><th>يكفي حتى</th><th>مهلة المورّد</th><th>الخطر</th><th>الكمية المقترحة</th><th>اطلب خلال</th><th></th></tr></thead>
+      <tbody>${ser.map(s => `<tr class="click ${s.key === state.sel ? 'sel' : ''}" data-sel="${s.key}"><td>${s.med.name}${s.med.controlled ? ' <span class="tag t-rule">مادة مراقبة</span>' : ''}${s.med.cold ? ' <span class="tag t-syn">تبريد</span>' : ''}</td><td>${s.hosp.name}</td><td>${nf(s.stock)}</td><td>${s.onOrder ? nf(s.onOrder) + ` <small style="color:var(--muted)">(بعد ${s.eta} يوم)</small>` : '—'}</td><td>${nf(s.rop)}</td><td>${nf(s.avg30, 1)}</td><td>${s.daysToZero === null ? 'أكثر من 150 يوماً' : s.daysToZero + ' يوماً'}</td><td>${s.L} يوماً</td><td>${risk(s.risk)}</td><td>${s.suggestQty ? nf(s.suggestQty) : '—'}</td><td>${s.risk === 'low' ? '—' : (s.orderBy === 0 ? 'الآن' : s.orderBy + ' يوماً')}</td><td><button class="btn" data-why="series|${s.key}">تفاصيل</button></td></tr>`).join('') || `<tr><td colspan="12" class="empty">لا توجد أصناف مطابقة للتصفية.</td></tr>`}</tbody></table></div>
+    </section>
+    ${sel ? `<section class="panel"><h2>${sel.med.name} — ${sel.hosp.name} ${TAG.syn} ${TAG.pred}</h2><p class="sub">الخط المتصل استهلاك تجريبي، والمتقطع تنبؤ. يظهر أيضاً أداء النموذج على آخر 56 يوماً لم يُدرَّب عليها (WAPE لهذا الصنف: ${pct(sel.wapeM)} مقابل ${pct(sel.wapeB)} لخط الأساس).</p><div class="chart"><canvas id="medChart"></canvas></div></section>` : ''}
+    <div class="grid2">
+      <section class="panel"><h2>تشغيلات معرّضة للانتهاء ${TAG.rule}</h2><p class="sub">قاعدة «الأقدم انتهاءً يُصرف أولاً» (FEFO) مطبّقة على الطلب المتوقع: الكمية التي لن تُستهلك قبل تاريخ الانتهاء. هذه قاعدة حسابية وليست ذكاءً اصطناعياً.</p>
+        <div class="tbl scroll"><table><thead><tr><th>الصنف</th><th>المنشأة</th><th>التشغيلة</th><th>الكمية</th><th>ينتهي</th><th>معرّض</th><th>القيمة</th></tr></thead><tbody>
+        ${lots.map(({ s, l }) => `<tr><td>${s.med.name}</td><td>${s.hosp.name}</td><td>${l.lot}</td><td>${nf(l.qty)}</td><td>${l.expired ? '<span class="risk r-crit">منتهٍ</span>' : 'بعد ' + l.off + ' يوماً'}</td><td>${nf(l.atRisk)}</td><td>${jod(l.atRisk * s.med.price)}</td></tr>`).join('') || '<tr><td colspan="7" class="empty">لا توجد تشغيلات معرّضة.</td></tr>'}
+        </tbody></table></div></section>
+      <section class="panel"><h2>مقارنة سياستي إعادة الطلب ${TAG.sim}</h2><p class="sub">محاكاة على آخر 120 يوماً من الطلب التجريبي، مع مراجعة أسبوعية ومهلة توريد متغيّرة (±20٪) متطابقة للسياستين. خط الأساس: متوسط 90 يوماً × (المهلة + 14 يوماً). سياسة التنبؤ: الطلب المتوقع خلال (المهلة + 7) + مخزون أمان 95٪. لا تمثّل هذه النتائج تحسّناً فعلياً في أي مستشفى.</p>
+        <div class="tbl"><table><thead><tr><th>المؤشر</th><th>خط الأساس</th><th>سياسة التنبؤ</th></tr></thead><tbody>
+          <tr><td>أيام النفاد (مجموع الأصناف)</td><td>${simB}</td><td>${simF}</td></tr>
+          <tr><td>قيمة الطلب غير الملبّى</td><td>${jod(unB)}</td><td>${jod(unF)}</td></tr>
+          <tr><td>متوسط قيمة المخزون</td><td>${jod(invB)}</td><td>${jod(invF)}</td></tr>
+        </tbody></table></div>
+        <p class="note" style="margin-top:10px">المقايضة واضحة في النتائج: ${simF < simB ? 'أيام نفاد أقل' : 'لا يوجد تحسّن في أيام النفاد'} ${invF > invB ? 'مقابل مخزون متوسط أعلى بنسبة ' + pct(invF / invB - 1) : 'مع مخزون متوسط أقل بنسبة ' + pct(1 - invF / invB)}.</p>
+      </section>
+    </div>`,
+    after() { if (sel) seriesChart('medChart', sel, state.range); }
+  };
+};
+
+/* ---------- تدفق المرضى ---------- */
+VIEWS.flow = () => {
+  const tabs = `<div class="tabs" role="tablist">${[['clinics', 'العيادات والمواعيد'], ['beds', 'الأسرّة والسعة']].map(([k, v]) => `<button role="tab" aria-selected="${state.flowTab === k}" data-ftab="${k}">${v}</button>`).join('')}</div>`;
+  const v = state.flowTab === 'clinics' ? clinicsView() : bedsView();
+  return { html: tabs + v.html, after: v.after };
+};
+function clinicsView() {
+  const fe = S.flow.eval, ns = noShow(30);
+  const capPast = E.sum(S.flow.cdays.filter(c => c.o < 0 && c.o >= -30 && inFac(c.h) && (state.clinic === 'ALL' || c.c === state.clinic)).map(c => c.cap));
+  const fut = S.flow.cdays.filter(c => c.o >= 0 && c.o <= 6 && inFac(c.h) && (state.clinic === 'ALL' || c.c === state.clinic)).sort((a, b) => a.o - b.o || a.h.localeCompare(b.h));
+  const past = S.flow.appts.filter(a => a.o < 0 && a.o >= -90 && inFac(a.h) && (state.clinic === 'ALL' || a.c === state.clinic));
+  const nDays = {}; for (const c of S.flow.cdays) if (c.o < 0 && c.o >= -90 && inFac(c.h) && (state.clinic === 'ALL' || c.c === state.clinic)) nDays[c.dw] = (nDays[c.dw] || 0) + 1;
+  const heat = {}; for (const a of past) { const k = a.dw + '|' + a.hour; heat[k] = (heat[k] || 0) + 1; }
+  let mx = 0; for (let d = 0; d < 5; d++) for (let h = 8; h < 14; h++) mx = Math.max(mx, (heat[d + '|' + h] || 0) / (nDays[d] || 1));
+  return {
+    html: `
+    <div class="filters"><label class="field">العيادة<select id="fClinic"><option value="ALL">كل العيادات</option>${E.CLINICS.map(c => `<option value="${c.id}" ${state.clinic === c.id ? 'selected' : ''}>${c.name}</option>`).join('')}</select></label></div>
+    <div class="kpis">
+      <div class="kpi"><span class="lbl">نسبة عدم الحضور (30 يوماً)</span><span class="val">${pct(ns.rate)}</span>${TAG.syn}</div>
+      <div class="kpi"><span class="lbl">متوسط الانتظار</span><span class="val">${nf(ns.wait, 1)} <small>دقيقة</small></span><span class="cmp">من وقت الوصول حتى بدء المعاينة</span>${TAG.syn}</div>
+      <div class="kpi"><span class="lbl">استخدام السعة (30 يوماً)</span><span class="val">${pct(ns.att / Math.max(1, capPast))}</span><span class="cmp">الحضور ÷ المقاعد المجدولة</span>${TAG.syn}</div>
+      <div class="kpi"><span class="lbl">قدرة نموذج الغياب على التمييز (AUC)</span><span class="val">${nf(fe.aucModel, 3)}</span><span class="cmp">خط الأساس (نسبة العيادة): ${nf(fe.aucBase, 3)}</span>${TAG.pred}</div>
+      <div class="kpi"><span class="lbl">درجة Brier (الأقل أفضل)</span><span class="val">${nf(fe.brierModel, 3)}</span><span class="cmp">خط الأساس: ${nf(fe.brierBase, 3)}</span>${TAG.pred}</div>
+    </div>
+    <section class="panel"><h2>الأيام السبعة القادمة: الحجوزات والسعة ${TAG.pred}</h2>
+      <p class="sub">السعة من جدول المناوبات التجريبي (18 موعداً لكل طبيب يومياً). «الحضور المتوقع» تنبؤ نموذج، أما «سعة متاحة» فهي السعة المجدولة ناقص الحجوزات فقط، دون افتراض تحرير مقاعد بسبب الغياب.</p>
+      <div class="tbl scroll"><table><thead><tr><th>اليوم</th><th>المنشأة</th><th>العيادة</th><th>الأطباء</th><th>السعة</th><th>الحجوزات</th><th>الحضور المتوقع</th><th>خطر غياب مرتفع</th><th>الحالة</th></tr></thead><tbody>
+      ${fut.map(c => `<tr class="click" data-why="cday|${c.key}"><td>${dLong.format(E.dt(c.o))}</td><td>${hName(c.h)}</td><td>${E.CLINICS.find(x => x.id === c.c).name}</td><td>${c.clin}${c.leave ? ' <span class="tag t-syn">غياب طبيب</span>' : ''}</td><td>${c.cap}</td><td>${c.booked}</td><td>${nf(c.expected)}</td><td>${c.highRisk}</td><td>${c.excess > 0 ? `<span class="risk r-high">تجاوز بـ ${c.excess}</span>` : c.free > 0 ? `<span class="risk r-low">سعة متاحة ${c.free}</span>` : '<span class="risk r-med">ممتلئ</span>'}</td></tr>`).join('') || '<tr><td colspan="9" class="empty">لا توجد أيام عمل مطابقة.</td></tr>'}
+      </tbody></table></div></section>
+    <div class="grid2">
+      <section class="panel"><h2>نسبة عدم الحضور الأسبوعية ${TAG.syn}</h2><p class="sub">آخر 26 أسبوعاً للعيادات المختارة.</p><div class="chart sm"><canvas id="nsWeek"></canvas></div></section>
+      <section class="panel"><h2>معايرة نموذج الغياب ${TAG.pred}</h2><p class="sub">على ${nf(fe.nTest)} موعداً من آخر 30 يوماً لم يُدرَّب عليها النموذج: متوسط الاحتمال المتوقع مقابل النسبة الفعلية في كل عُشير.</p><div class="chart sm"><canvas id="calib"></canvas></div></section>
+      <section class="panel"><h2>متوسط الحجوزات حسب اليوم والساعة ${TAG.syn}</h2><p class="sub">متوسط عدد المواعيد المحجوزة لكل يوم عمل خلال آخر 90 يوماً.</p>
+        <div class="tbl"><table class="heat"><thead><tr><th>اليوم</th>${[8, 9, 10, 11, 12, 13].map(h => `<th>${h}:00</th>`).join('')}</tr></thead><tbody>
+        ${[0, 1, 2, 3, 4].map(d => `<tr><td style="text-align:start">${DOWN[d]}</td>${[8, 9, 10, 11, 12, 13].map(h => { const v = (heat[d + '|' + h] || 0) / (nDays[d] || 1); return `<td style="background:color-mix(in srgb,var(--primary) ${Math.round(v / (mx || 1) * 55)}%,transparent)">${nf(v, 1)}</td>`; }).join('')}</tr>`).join('')}
+        </tbody></table></div></section>
+      <section class="panel"><h2>متوسط الانتظار حسب ساعة الموعد ${TAG.syn}</h2><p class="sub">من الطوابع الزمنية التجريبية للوصول وبدء المعاينة، آخر 90 يوماً.</p><div class="chart sm"><canvas id="waitHour"></canvas></div></section>
+    </div>`,
+    after() {
+      const weeks = [], rates = [];
+      for (let w = 25; w >= 0; w--) { const a = S.flow.appts.filter(x => x.o < -w * 7 && x.o >= -(w + 1) * 7 && inFac(x.h) && (state.clinic === 'ALL' || x.c === state.clinic)); weeks.push(dayLbl(-(w + 1) * 7)); rates.push(a.length ? E.mean(a.map(x => x.ns)) * 100 : null); }
+      chart('nsWeek', { type: 'line', data: { labels: weeks, datasets: [line('نسبة عدم الحضور', rates, cssv('--primary'))] }, options: { plugins: { legend: { display: false } }, scales: { y: { min: 0, ticks: { callback: v => v + '٪' } }, x: { ticks: { maxTicksLimit: 8 } } } } });
+      const cal = fe.calib;
+      chart('calib', { type: 'scatter', data: { datasets: [{ label: 'النموذج', data: cal.map(c => ({ x: c.pred * 100, y: c.obs * 100 })), borderColor: cssv('--pred'), backgroundColor: cssv('--pred'), showLine: true, borderDash: [6, 4] }, { label: 'معايرة مثالية', data: [{ x: 0, y: 0 }, { x: 50, y: 50 }], borderColor: cssv('--muted'), showLine: true, pointRadius: 0, borderWidth: 1 }] }, options: { interaction: { mode: 'nearest', intersect: true }, scales: { x: { min: 0, max: 50, title: { display: true, text: 'المتوقع ٪' } }, y: { min: 0, max: 50, title: { display: true, text: 'الفعلي ٪' } } } } });
+      const hrs = [8, 9, 10, 11, 12, 13], att = S.flow.appts.filter(a => a.o < 0 && a.o >= -90 && a.wait != null && inFac(a.h) && (state.clinic === 'ALL' || a.c === state.clinic));
+      chart('waitHour', { type: 'bar', data: { labels: hrs.map(h => h + ':00'), datasets: [{ label: 'دقيقة', data: hrs.map(h => E.mean(att.filter(a => a.hour === h).map(a => a.wait))), backgroundColor: cssv('--primary') }] }, options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'دقيقة' } } } } });
+    }
+  };
+}
+function bedsView() {
+  const units = S.beds.units.filter(u => inFac(u.h)), be = S.beds.eval;
+  const sel = units.filter(u => u.d === state.dept), dp = E.DEPTS.find(d => d.id === state.dept);
+  // سيناريو الخروج قبل الظهر
+  const scen = sel.map(u => {
+    const expDis = u.census / u.dept.los, adm = u.meanAdm;
+    const peak = (x, e) => Math.round(u.census + adm * 0.6 - expDis * (x / 100) - u.census * (e / 100));
+    return { u, base: peak(20, 0), now: peak(state.noon, state.early) };
+  });
+  const tot = k => E.sum(scen.map(s => s[k])), stf = E.sum(sel.map(u => u.staffed));
+  return {
+    html: `
+    <div class="kpis">
+      <div class="kpi"><span class="lbl">الإشغال الحالي المسجّل</span><span class="val">${pct(bedsAgg(units).occ)}</span>${TAG.syn}</div>
+      <div class="kpi"><span class="lbl">مرضى بانتظار سرير</span><span class="val">${E.sum(units.map(u => u.queue))}</span><span class="cmp">من سجل القبول التجريبي</span>${TAG.syn}</div>
+      <div class="kpi"><span class="lbl">أقسام بتنبيه ازدحام</span><span class="val">${units.filter(u => u.congest).length}</span>${TAG.pred}</div>
+      <div class="kpi"><span class="lbl">خطأ التنبؤ بعد 7 أيام (MAE)</span><span class="val">${nf(be.maeModel7, 2)} <small>سرير</small></span><span class="cmp">خط الأساس (الثبات): ${nf(be.maePers7, 2)}</span>${TAG.pred}</div>
+      <div class="kpi"><span class="lbl">خطأ التنبؤ لليوم التالي (MAE)</span><span class="val">${nf(be.maeModel1, 2)} <small>سرير</small></span><span class="cmp">خط الأساس: ${nf(be.maePers1, 2)}</span>${TAG.pred}</div>
+    </div>
+    <section class="panel"><h2>الأسرّة حسب القسم</h2>
+      <p class="sub">«شاغر مُبلّغ عنه» = المشغّل بكادر ناقص المشغول ناقص المحجوب للتنظيف أو الصيانة في آخر قياس تجريبي؛ لا يعني توفر سرير الآن. أسرّة العناية المركزة والعزل لا تُستبدل بأسرّة أقسام أخرى.</p>
+      <div class="tbl scroll"><table><thead><tr><th>القسم</th><th>المنشأة</th><th>الأسرّة الفعلية</th><th>مشغّلة بكادر</th><th>مشغولة</th><th>محجوبة</th><th>شاغر مُبلّغ عنه</th><th>الإشغال</th><th>توقع +1</th><th>توقع +3</th><th>توقع +7</th><th>بانتظار سرير</th></tr></thead><tbody>
+      ${units.map(u => { const o = u.census / u.staffed; return `<tr class="click" data-why="bed|${u.key}"><td>${u.dept.name}</td><td>${u.hosp.name}</td><td>${u.cap}</td><td>${u.staffed}</td><td>${u.census}</td><td>${u.blocked}</td><td>${u.vacant}</td><td>${pct(o, 0)}</td>${[0, 2, 6].map(i => `<td style="color:var(--pred)">${pct(u.fcOcc[i], 0)}</td>`).join('')}<td>${u.queue}</td></tr>`; }).join('')}
+      </tbody></table></div></section>
+    <div class="grid2">
+      <section class="panel"><h2>الإشغال وتوقع 7 أيام ${TAG.syn} ${TAG.pred}</h2>
+        <div class="filters" style="margin-bottom:8px"><label class="field">القسم<select id="fDept">${E.DEPTS.map(d => `<option value="${d.id}" ${state.dept === d.id ? 'selected' : ''}>${d.name}</option>`).join('')}</select></label></div>
+        <div class="chart"><canvas id="bedChart"></canvas></div></section>
+      <section class="panel"><h2>سيناريو توقيت الخروج — ${dp.name} ${TAG.sim}</h2>
+        <p class="sub">افتراض تبسيطي لذروة الظهيرة غداً: الإشغال الحالي + 60٪ من القبول اليومي المعتاد يصل قبل الظهر − الخروج المنجز قبل الظهر. هذا سيناريو للنقاش وليس توقعاً، ولا يغيّر أي قرار خروج سريري.</p>
+        <div style="display:grid;gap:12px">
+          <label class="field">نسبة الخروج المتوقع المنجَز قبل الظهر: <b class="num" style="color:var(--ink)">${state.noon}٪</b><span class="range"><input type="range" id="sNoon" min="0" max="80" step="5" value="${state.noon}" aria-label="نسبة الخروج قبل الظهر"></span></label>
+          <label class="field">مرضى مستقرّون جاهزون طبياً للخروج ويُنجز خروجهم مبكراً (٪ من المشغول): <b class="num" style="color:var(--ink)">${state.early}٪</b><span class="range"><input type="range" id="sEarly" min="0" max="10" step="1" value="${state.early}" aria-label="نسبة الخروج المبكر"></span></label>
+        </div>
+        <div class="tbl" style="margin-top:12px"><table><thead><tr><th>المنشأة</th><th>مشغّلة بكادر</th><th>الذروة (افتراض 20٪)</th><th>الذروة في السيناريو</th><th>عجز متوقع في الذروة</th></tr></thead><tbody>
+        ${scen.map(s => `<tr><td>${s.u.hosp.name}</td><td>${s.u.staffed}</td><td>${s.base}</td><td>${s.now}</td><td>${Math.max(0, s.now - s.u.staffed)}</td></tr>`).join('')}
+        <tr><td><b>المجموع</b></td><td><b>${stf}</b></td><td><b>${tot('base')}</b></td><td><b>${tot('now')}</b></td><td><b>${E.sum(scen.map(s => Math.max(0, s.now - s.u.staffed)))}</b></td></tr>
+        </tbody></table></div>
+      </section>
+    </div>`,
+    after() {
+      const us = sel, BH = E.BH, labels = [], hist = [], fc = [];
+      const st = E.sum(us.map(u => u.staffed));
+      for (let i = BH - 90; i < BH + 7; i++) {
+        labels.push(dayLbl(i - BH));
+        hist.push(i < BH ? E.sum(us.map(u => u.hist[i].census)) / st * 100 : null);
+        fc.push(i >= BH - 1 ? (i === BH - 1 ? E.sum(us.map(u => u.hist[i].census)) / st * 100 : E.sum(us.map(u => u.fc[i - BH])) / st * 100) : null);
+      }
+      const thr = (dp.noSub ? 90 : 92);
+      chart('bedChart', { type: 'line', data: { labels, datasets: [line('الإشغال المسجّل (تجريبي)', hist, cssv('--ink'), [], { borderWidth: 1.4 }), line('التنبؤ', fc, cssv('--pred'), [6, 4]), line('عتبة الازدحام', labels.map(() => thr), cssv('--crit'), [2, 4], { borderWidth: 1 })] }, options: { scales: { y: { min: 40, max: 100, ticks: { callback: v => v + '٪' } }, x: { ticks: { maxTicksLimit: 8 } } } } });
+    }
+  };
+}
+
+/* ---------- التوصيات ---------- */
+VIEWS.recs = () => {
+  const list = allRecs().filter(r => inFac(r.fac) && (state.recModule === 'ALL' || r.module === state.recModule) && (state.recStatus === 'ALL' || recStatus(r) === state.recStatus));
+  return {
+    html: `
+    <p class="lead">كل توصية مقترح للمراجعة البشرية فقط، ولا يُنفَّذ أي شراء أو نقل أو تعديل موعد تلقائياً. الدور الحالي: <b>${ROLES[state.role]}</b> — ${state.role === 'pharm' ? 'يراجع توصيات الأدوية فقط.' : state.role === 'ops' ? 'يراجع توصيات تدفق المرضى فقط.' : 'يراجع جميع التوصيات.'}</p>
+    <div class="filters">
+      <label class="field">الحالة<select id="fStatus">${[['ALL', 'الكل'], ...Object.entries(STATUS)].map(([k, v]) => `<option value="${k}" ${state.recStatus === k ? 'selected' : ''}>${v}</option>`).join('')}</select></label>
+      <label class="field">الوحدة<select id="fModule">${[['ALL', 'الكل'], ['med', 'الأدوية والمستلزمات'], ['flow', 'تدفق المرضى والسعة']].map(([k, v]) => `<option value="${k}" ${state.recModule === k ? 'selected' : ''}>${v}</option>`).join('')}</select></label>
+    </div>
+    <div style="display:grid;gap:12px">${list.map(recCard).join('') || '<p class="empty panel">لا توجد توصيات بهذه الحالة. غيّر التصفية لعرض السجل الكامل.</p>'}</div>`
+  };
+};
+function recCard(r) {
+  const st = recStatus(r), rv = r.hist || reviews[r.id], can = canReview(r);
+  return `<article class="rec s-${r.sev}">
+    <div class="row">${risk(r.sev)}<span>${TYPES[r.type]}</span><span>${hName(r.fac)}</span>${BASIS[r.basis]}${r.hist ? '<span class="tag t-syn">سجل سابق تجريبي</span>' : ''}<span class="status st-${st}">${STATUS[st]}</span></div>
+    <h3>${esc(r.title)}</h3>
+    <p style="margin:0">${esc(r.summary)}</p>
+    ${r.constraints.length ? `<ul>${r.constraints.map(c => `<li>${esc(c)}</li>`).join('')}</ul>` : ''}
+    ${rv ? `<p class="note">${STATUS[rv.status]} بواسطة ${ROLES[rv.role] || rv.role} — ${tFmt.format(new Date(rv.time))}${rv.note ? ': ' + esc(rv.note) : ''}</p>` : ''}
+    ${!r.hist ? `<div class="act">
+      ${r.ref ? `<button class="btn" data-why="${r.ref.type}|${r.ref.key}">عرض الأساس</button>` : ''}
+      ${can ? `<textarea id="note-${r.id}" placeholder="ملاحظة المراجعة (مطلوبة عند الرفض)" aria-label="ملاحظة المراجعة"></textarea>
+        <button class="btn primary" data-review="approved" data-id="${r.id}">اعتماد</button>
+        <button class="btn" data-review="deferred" data-id="${r.id}">تأجيل</button>
+        <button class="btn danger" data-review="rejected" data-id="${r.id}">رفض</button>` : `<span class="meta" style="font-size:13px;color:var(--muted)">صلاحية المراجعة لدور ${r.module === 'med' ? 'الصيدلي المخوّل' : 'مدير العمليات'} أو مدير النظام.</span>`}
+    </div>` : ''}
+  </article>`;
+}
+
+/* ---------- التدقيق ---------- */
+VIEWS.audit = () => {
+  const rows = [...audit].sort((a, b) => b.time.localeCompare(a.time));
+  return {
+    html: `<p class="lead">يُسجَّل كل تغيير لحالة توصية أو للدور الحالي مع الوقت والدور والملاحظة. في نسخة العرض يُحفظ السجل في متصفحك فقط.</p>
+    <section class="panel"><div class="tbl scroll"><table><thead><tr><th>الوقت</th><th>الدور</th><th>الإجراء</th><th>الهدف</th><th>ملاحظة</th></tr></thead><tbody>
+    ${rows.map(a => `<tr><td>${tFmt.format(new Date(a.time))}</td><td>${a.role === 'system' ? 'النظام' : ROLES[a.role]}</td><td>${esc(a.action)}${a.seed ? ' <span class="tag t-syn">تجريبي</span>' : ''}</td><td>${esc(a.target)}</td><td>${esc(a.note)}</td></tr>`).join('')}
+    </tbody></table></div>
+    <div style="margin-top:12px"><button class="btn danger" id="resetDemo" ${state.role !== 'admin' ? 'disabled' : ''}>إعادة ضبط قرارات العرض</button> ${state.role !== 'admin' ? '<span style="font-size:13px;color:var(--muted)">متاح لمدير النظام فقط.</span>' : ''}</div></section>`
+  };
+};
+
+/* ---------- المنهجية ---------- */
+VIEWS.method = () => {
+  const me = S.meds.eval, fe = S.flow.eval, be = S.beds.eval;
+  const names = ['الثابت', 'أيام الحجز المسبق (لكل 30 يوماً)', 'عدد مرات الغياب السابقة', 'إرسال رسالة تذكير', 'العمر أقل من 18', 'العمر 18–39', 'العمر 65 فأكثر', 'المسافة متوسطة', 'المسافة بعيدة', 'مريض جديد', 'موعد عاجل', 'موعد بعد الظهر', 'يوم الأحد', 'يوم الخميس'];
+  return {
+    html: `<div class="prose">
+    <p class="lead">نموذج أولي لمسابقة. كل الأرقام في هذه الصفحة محسوبة الآن في متصفحك من بيانات مُولَّدة ببذرة ثابتة (20261009)، ولا تمثّل أداءً سريرياً أو تشغيلياً في أي مستشفى أردني.</p>
+    </div>
+    <div class="grid3">
+      <section class="panel"><h2>تنبؤ الطلب على الأدوية</h2><p class="sub">انحدار خطي منتظم (Ridge) لكل صنف ومنشأة: اتجاه زمني + يوم الأسبوع + موسمية سنوية (جيب وجيب تمام)، على آخر 540 يوماً.</p>
+        <dl class="trace"><dt>WAPE للنموذج</dt><dd>${pct(me.wapeModel)}</dd><dt>WAPE لخط الأساس</dt><dd>${pct(me.wapeBase)}</dd><dt>MAE للنموذج</dt><dd>${nf(me.maeModel, 1)} وحدة/يوم</dd><dt>MAE لخط الأساس</dt><dd>${nf(me.maeBase, 1)} وحدة/يوم</dd><dt>الانحياز</dt><dd>${pct(me.biasPct, 2)}</dd><dt>حجم الاختبار</dt><dd>${me.series} سلسلة × 56 يوماً</dd></dl></section>
+      <section class="panel"><h2>خطر عدم الحضور</h2><p class="sub">انحدار لوجستي منتظم (IRLS). تدريب على المواعيد الأقدم من 30 يوماً واختبار على آخر 30 يوماً.</p>
+        <dl class="trace"><dt>AUC للنموذج</dt><dd>${nf(fe.aucModel, 3)}</dd><dt>AUC لخط الأساس</dt><dd>${nf(fe.aucBase, 3)}</dd><dt>Brier للنموذج</dt><dd>${nf(fe.brierModel, 4)}</dd><dt>Brier لخط الأساس</dt><dd>${nf(fe.brierBase, 4)}</dd><dt>نسبة الغياب في الاختبار</dt><dd>${pct(fe.rate)}</dd><dt>التدريب / الاختبار</dt><dd>${nf(fe.nTrain)} / ${nf(fe.nTest)}</dd></dl></section>
+      <section class="panel"><h2>إشغال الأسرّة</h2><p class="sub">انحدار ذاتي من الدرجة الأولى مع يوم الأسبوع والموسمية، تنبؤ تكراري حتى 7 أيام. خط الأساس: بقاء الإشغال كما هو.</p>
+        <dl class="trace"><dt>MAE يوم واحد</dt><dd>${nf(be.maeModel1, 2)} مقابل ${nf(be.maePers1, 2)} سرير</dd><dt>MAE سبعة أيام</dt><dd>${nf(be.maeModel7, 2)} مقابل ${nf(be.maePers7, 2)} سرير</dd><dt>نقاط البدء في الاختبار</dt><dd>${nf(be.origins)}</dd></dl>
+        <p class="note" style="margin-top:10px">التحسّن لليوم التالي صغير؛ الإشغال قصير المدى يتبع قيمة اليوم السابق، ويظهر أثر النموذج أوضح عند 7 أيام.</p></section>
+    </div>
+    <section class="panel"><h2>معاملات نموذج الغياب (نسبة الأرجحية)</h2><p class="sub">قيمة أكبر من 1 تعني ارتباطاً بغياب أعلى في البيانات التجريبية. معاملات الارتباط ليست علاقات سببية.</p>
+      <div class="tbl"><table><thead><tr><th>المتغيّر</th><th>المعامل</th><th>نسبة الأرجحية</th></tr></thead><tbody>${fe.w.slice(1).map((w, i) => `<tr><td>${names[i + 1]}</td><td>${nf(w, 3)}</td><td>${nf(Math.exp(w), 2)}</td></tr>`).join('')}</tbody></table></div></section>
+    <div class="grid2">
+    <section class="panel prose"><h2>ما هو نموذج وما هو قاعدة</h2>
+      <ul>
+        <li><b>تنبؤ نموذج:</b> الطلب اليومي على الأصناف، احتمال الغياب، الإشغال خلال 7 أيام.</li>
+        <li><b>قاعدة حسابية:</b> مخزون الأمان وحد إعادة الطلب (صيغة إحصائية قياسية تستخدم مخرجات التنبؤ)، تحديد الكميات المعرّضة للانتهاء (FEFO)، تجاوز الحجوزات للسعة، البحث عن مواعيد بديلة.</li>
+        <li><b>محاكاة:</b> مقارنة سياستي إعادة الطلب، وسيناريو توقيت الخروج.</li>
+        <li>مخزون الأمان = 1.65 × √(المهلة × تباين الخطأ اليومي + (الطلب اليومي × 20٪ من المهلة)²)، أي مستوى خدمة 95٪ مع افتراض توزيع طبيعي.</li>
+      </ul>
+      <h3>افتراضات البيانات التجريبية</h3>
+      <ul>
+        <li>4 مستشفيات بأسماء افتراضية في عمّان وإربد والزرقاء والعقبة، 12 صنفاً، 5 عيادات، 5 أقسام داخلية.</li>
+        <li>عطلة نهاية الأسبوع الجمعة والسبت؛ العيادات من الأحد إلى الخميس، 08:00–14:00، 20 دقيقة لكل موعد.</li>
+        <li>موسمية شتوية للمضادات الحيوية والأدوية التنفسية وأقسام الأطفال والباطنية، وصيفية للسوائل الوريدية.</li>
+        <li>الغياب مولَّد من علاقة لوجستية معروفة مع ضوضاء غير مرصودة؛ لذلك فإن قدرة النموذج على استعادتها لا تثبت أداءً على بيانات حقيقية.</li>
+        <li>الأسعار بالدينار الأردني تقريبية وتوضيحية فقط.</li>
+      </ul>
+      <h3>حدود معروفة</h3>
+      <ul>
+        <li>لا توجد بيانات حقيقية ولا تكامل مع أي نظام مستشفى.</li>
+        <li>نموذج الطلب لا يلتقط الأوبئة المفاجئة أو انقطاعات التوريد الوطنية أو تغيّر البروتوكولات العلاجية.</li>
+        <li>نموذج الغياب قد يحمل تحيّزاً ضد فئات بعينها (مثل البعيدين جغرافياً)؛ يجب ألا يُستخدم لحرمان أي مريض من موعد.</li>
+        <li>سيناريو الخروج تبسيطي ولا يمثّل نموذجاً لتدفق المرضى داخل المستشفى.</li>
+      </ul>
+    </section>
+    <section class="panel prose"><h2>ما يلزم قبل أي استخدام فعلي في الأردن</h2>
+      <ul>
+        <li>الامتثال لقانون حماية البيانات الشخصية الأردني رقم 24 لسنة 2023 وتعليماته، وتقييم أثر على الخصوصية، وتحديد مكان استضافة البيانات.</li>
+        <li>موافقات وزارة الصحة وإدارات المستشفيات، ومراجعة لجان الأخلاقيات عند استخدام بيانات المرضى.</li>
+        <li>التنسيق مع المؤسسة العامة للغذاء والدواء بخصوص الأدوية، خصوصاً المواد المراقبة، وأي نقل بين المنشآت.</li>
+        <li>تكامل آمن مع أنظمة السجلات والصيدلية القائمة عبر معايير مثل HL7 FHIR، مع التحقق من جودة البيانات المصدرية.</li>
+        <li>تحقق سريري واستخدام «صامت» تجريبي لفترة كافية قبل عرض التوصيات على المستخدمين، ومراقبة الانحراف والتحيّز بعد ذلك.</li>
+        <li>مصادقة مركزية، أدوار وصلاحيات دقيقة، تشفير أثناء النقل والتخزين، سجل تدقيق غير قابل للتعديل، واختبارات اختراق، وفق متطلبات الأمن السيبراني الوطنية.</li>
+        <li>يجب التحقق من المتطلبات النافذة وقت التطبيق مع الجهات المختصة؛ هذه القائمة ليست استشارة قانونية.</li>
+      </ul>
+      <h3>عن نسخة العرض هذه</h3>
+      <p>تعمل بالكامل داخل المتصفح دون خادم، لتسهيل العرض. المنطق (توليد البيانات، النماذج، التوصيات) معزول في محرك واحد يمكن نقله إلى خدمات FastAPI بلغة Python (pandas وscikit-learn) مع قاعدة PostgreSQL وواجهة Next.js، وفق المعمارية المطلوبة في المواصفات. الحفظ هنا محلي في متصفحك فقط وليس قاعدة بيانات.</p>
+    </section></div>`
+  };
+};
+
+/* ---------- نافذة «لماذا؟» ---------- */
+function openWhy(type, key) {
+  const dlg = document.getElementById('dlg'), t = document.getElementById('dlgTitle'), b = document.getElementById('dlgBody');
+  let after = null;
+  if (type === 'series') {
+    const s = S.meds.series.find(x => x.key === key);
+    t.textContent = s.med.name + ' — ' + s.hosp.name;
+    const why = { crit: 'يُتوقع نفاد المخزون بعد ' + s.daysToZero + ' يوماً، وهي مدة أقصر من مهلة المورّد (' + s.L + ' يوماً)، فلن يصل أي طلب جديد قبل النفاد.', high: 'المخزون المتاح مع الكميات قيد التوريد أقل من حد إعادة الطلب.', med: 'المخزون فوق حد إعادة الطلب بهامش يقل عن 14 يوماً من الطلب المتوقع.', low: 'المخزون فوق حد إعادة الطلب بهامش كافٍ.' }[s.risk];
+    b.innerHTML = `<div class="row" style="display:flex;gap:8px;flex-wrap:wrap">${risk(s.risk)} ${TAG.syn} ${TAG.pred} ${TAG.rule}</div>
+      <p style="margin:0"><b>سبب التصنيف:</b> ${why}</p>
+      <dl class="trace">
+        <dt>متوسط الطلب المتوقع (30 يوماً)</dt><dd>${nf(s.avg30, 1)} ${s.med.unit}/يوم <span class="tag t-pred">تنبؤ</span></dd>
+        <dt>مهلة المورّد</dt><dd>${s.L} يوماً — ${E.SUPPLIERS[s.med.sup]} (افتراضي)</dd>
+        <dt>الطلب المتوقع خلال المهلة</dt><dd>${nf(s.ltd)}</dd>
+        <dt>عدم اليقين خلال المهلة (σ)</dt><dd>${nf(s.sigL, 1)} — يشمل خطأ النموذج وتباين المهلة 20٪</dd>
+        <dt>مخزون الأمان (95٪)</dt><dd>${nf(s.ss)}</dd>
+        <dt>حد إعادة الطلب</dt><dd>${nf(s.rop)}</dd>
+        <dt>المخزون الحالي + قيد التوريد</dt><dd>${nf(s.stock)} + ${nf(s.onOrder)} = ${nf(s.position)}</dd>
+        <dt>احتمال تقديري لعدم كفاية المخزون خلال المهلة</dt><dd>${pct(s.pStockout)} <span class="tag t-pred">تقدير إحصائي</span></dd>
+        <dt>الكمية المقترحة</dt><dd>${s.suggestQty ? nf(s.suggestQty) + ' (تغطي المهلة + 30 يوماً + مخزون الأمان)' : 'لا يلزم طلب الآن'}</dd>
+        <dt>دقة النموذج لهذا الصنف (WAPE)</dt><dd>${pct(s.wapeM)} مقابل ${pct(s.wapeB)} لخط الأساس</dd>
+      </dl>
+      <div class="chart"><canvas id="dlgChart"></canvas></div>
+      <p class="note">أي أمر شراء أو نقل يتطلب مراجعة صيدلي مخوّل. التنبؤ لا يعكس أوبئة مفاجئة أو انقطاعات توريد غير موجودة في البيانات التاريخية.</p>`;
+    after = () => seriesChart('dlgChart', s, 120);
+  } else if (type === 'bed') {
+    const u = S.beds.units.find(x => x.key === key);
+    t.textContent = 'قسم ' + u.dept.name + ' — ' + u.hosp.name;
+    b.innerHTML = `<div style="display:flex;gap:8px;flex-wrap:wrap">${TAG.syn} ${TAG.pred}</div>
+      <dl class="trace">
+        <dt>الأسرّة الفعلية / المشغّلة بكادر</dt><dd>${u.cap} / ${u.staffed}</dd>
+        <dt>المشغول في آخر قياس</dt><dd>${u.census} (${pct(u.census / u.staffed)})</dd>
+        <dt>محجوب للتنظيف أو الصيانة</dt><dd>${u.blocked}</dd>
+        <dt>شاغر مُبلّغ عنه</dt><dd>${u.vacant} — حسب آخر سجل تجريبي، وليس تأكيداً لتوفر سرير الآن</dd>
+        <dt>مرضى بانتظار سرير</dt><dd>${u.queue}</dd>
+        <dt>متوسط القبول / الخروج اليومي (28 يوماً)</dt><dd>${nf(u.meanAdm, 1)} / ${nf(u.meanDis, 1)}</dd>
+        <dt>الإشغال المتوقع للأيام 1–7</dt><dd>${u.fcOcc.map(x => pct(x, 0)).join('، ')}</dd>
+        <dt>عتبة التنبيه</dt><dd>${pct(u.thr, 0)}${u.dept.noSub ? ' (قسم لا تُستبدل أسرّته)' : ''}</dd>
+        <dt>النتيجة</dt><dd>${u.congest ? 'تنبيه ازدحام: التوقع يتجاوز العتبة خلال 3 أيام.' : 'لا يوجد تنبيه.'}</dd>
+      </dl>
+      <p class="note">لا يُعاد توجيه مرضى الطوارئ ولا تُؤجَّل الرعاية العاجلة بناءً على هذا التنبؤ. أي نقل بين الأقسام يراعي التخصص والعزل ونسب التمريض، وقرار الخروج سريري.</p>`;
+  } else if (type === 'cday') {
+    const c = S.flow.cdays.find(x => x.key === key), cl = E.CLINICS.find(x => x.id === c.c).name;
+    const ap = [...c.appts].sort((a, b) => b.p - a.p).slice(0, 8);
+    t.textContent = 'عيادة ' + cl + ' — ' + hName(c.h) + ' — ' + dLong.format(E.dt(c.o));
+    b.innerHTML = `<div style="display:flex;gap:8px;flex-wrap:wrap">${TAG.syn} ${TAG.pred} ${TAG.rule}</div>
+      <dl class="trace">
+        <dt>الأطباء في جدول المناوبات</dt><dd>${c.clin}${c.leave ? ' (غياب طبيب واحد مسجّل)' : ''}</dd>
+        <dt>السعة المجدولة</dt><dd>${c.cap} موعداً</dd>
+        <dt>الحجوزات</dt><dd>${c.booked} (منها ${c.appts.filter(a => a.urg).length} عاجلة)</dd>
+        <dt>التجاوز / السعة المتاحة</dt><dd>${c.excess > 0 ? 'تجاوز بـ ' + c.excess : 'متاح ' + c.free}</dd>
+        <dt>الحضور المتوقع</dt><dd>${nf(c.expected, 1)} <span class="tag t-pred">تنبؤ</span></dd>
+      </dl>
+      <h3 style="margin:0;font-size:14px">أعلى المواعيد خطراً للغياب (معرّفات تجريبية)</h3>
+      <div class="tbl"><table><thead><tr><th>المعرّف</th><th>الساعة</th><th>الأولوية</th><th>الخطر المقدَّر</th></tr></thead><tbody>${ap.map(a => `<tr><td>${a.id}</td><td>${a.hour}:${String((a.slot % 3) * 20).padStart(2, '0')}</td><td>${a.urg ? 'عاجل' : 'روتيني'}</td><td>${pct(a.p, 0)}</td></tr>`).join('')}</tbody></table></div>
+      <p class="note">درجة الخطر للتذكير والتخطيط فقط، ولا تُستخدم لإلغاء موعد أو الحجز فوقه تلقائياً.</p>`;
+  }
+  dlg.showModal(); if (after) after();
+}
+
+/* ---------- الأحداث ---------- */
+document.addEventListener('click', e => {
+  const v = e.target.closest('[data-view]'); if (v) { state.view = v.dataset.view; render(); window.scrollTo(0, 0); return; }
+  const w = e.target.closest('[data-why]'); if (w) { e.stopPropagation(); const [t, k] = w.dataset.why.split(/\|(.+)/); openWhy(t, k); return; }
+  const s = e.target.closest('[data-sel]'); if (s) { state.sel = s.dataset.sel; render(); document.getElementById('medChart')?.scrollIntoView({ block: 'center' }); return; }
+  const f = e.target.closest('[data-ftab]'); if (f) { state.flowTab = f.dataset.ftab; render(); return; }
+  const r = e.target.closest('[data-review]'); if (r) {
+    const id = r.dataset.id, st = r.dataset.review, rec = S.recs.find(x => x.id === id), note = (document.getElementById('note-' + id)?.value || '').trim();
+    if (!canReview(rec)) return;
+    if (st === 'rejected' && !note) { const ta = document.getElementById('note-' + id); ta.focus(); ta.placeholder = 'اكتب سبب الرفض قبل المتابعة'; ta.style.borderColor = 'var(--crit)'; return; }
+    reviews[id] = { status: st, role: state.role, note, time: new Date().toISOString() };
+    logAction('مراجعة توصية: ' + STATUS[st], rec.title, note); render(); return;
+  }
+  if (e.target.id === 'dlgClose') { document.getElementById('dlg').close(); return; }
+  if (e.target.id === 'resetDemo' && state.role === 'admin') { reviews = {}; audit = audit.filter(a => a.seed); logAction('إعادة ضبط قرارات العرض', 'جميع التوصيات', ''); render(); }
+});
+document.addEventListener('change', e => {
+  const id = e.target.id;
+  if (id === 'fFac') { state.fac = e.target.value; state.sel = null; }
+  else if (id === 'fRole') { state.role = e.target.value; logAction('تبديل الدور التجريبي', ROLES[state.role], ''); }
+  else if (id === 'fCat') { state.medCat = e.target.value; state.sel = null; }
+  else if (id === 'fRange') state.range = +e.target.value;
+  else if (id === 'fClinic') state.clinic = e.target.value;
+  else if (id === 'fDept') state.dept = e.target.value;
+  else if (id === 'fStatus') state.recStatus = e.target.value;
+  else if (id === 'fModule') state.recModule = e.target.value;
+  else return;
+  render();
+});
+document.addEventListener('input', e => {
+  if (e.target.id === 'sNoon' || e.target.id === 'sEarly') {
+    state[e.target.id === 'sNoon' ? 'noon' : 'early'] = +e.target.value;
+    clearTimeout(window._t); window._t = setTimeout(() => { const y = window.scrollY; render(); window.scrollTo(0, y); document.getElementById(e.target.id)?.focus(); }, 120);
+  }
+});
+document.getElementById('dlg').addEventListener('close', () => { if (charts.dlgChart) { charts.dlgChart.destroy(); delete charts.dlgChart; } });
+try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => S && render()); } catch (e) { }
+
+function init() {
+  document.getElementById('fFac').innerHTML = '<option value="ALL">كل المنشآت</option>' + E.HOSP.map(h => `<option value="${h.id}">${h.name} — ${h.city}</option>`).join('');
+  document.getElementById('fRole').innerHTML = Object.entries(ROLES).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
+  loadStore(); render();
+}
+setTimeout(() => {
+  try { S = E.build(); init(); }
+  catch (err) { document.getElementById('content').innerHTML = '<p class="empty">تعذّر تشغيل المحرك: ' + esc(err.message) + '</p>'; console.error(err); }
+}, 40);
+
+</script>
+</body>
+</html>
